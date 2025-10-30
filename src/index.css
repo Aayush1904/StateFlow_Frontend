@@ -1,0 +1,548 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ProseMirror CSS for proper editor styling */
+.ProseMirror {
+  white-space: pre-wrap;
+}
+
+/* Heading styles - ensure proper sizing */
+.ProseMirror h1 {
+  font-size: 2.25em;
+  font-weight: 800;
+  line-height: 1.2;
+  margin-top: 0.5em;
+  margin-bottom: 0.5em;
+}
+
+.ProseMirror h2 {
+  font-size: 1.875em;
+  font-weight: 700;
+  line-height: 1.3;
+  margin-top: 0.5em;
+  margin-bottom: 0.5em;
+}
+
+.ProseMirror h3 {
+  font-size: 1.5em;
+  font-weight: 600;
+  line-height: 1.4;
+  margin-top: 0.5em;
+  margin-bottom: 0.5em;
+}
+
+/* Table styling with visible borders */
+.ProseMirror table {
+  border-collapse: collapse;
+  table-layout: fixed;
+  width: 100%;
+  margin: 1em 0;
+  overflow: hidden;
+}
+
+.ProseMirror table td,
+.ProseMirror table th {
+  min-width: 1em;
+  border: 1px solid #000;
+  padding: 6px 8px;
+  vertical-align: top;
+  box-sizing: border-box;
+  position: relative;
+}
+
+.ProseMirror table th {
+  font-weight: bold;
+  text-align: left;
+  background-color: #f9fafb;
+}
+
+.ProseMirror table .selectedCell:after {
+  z-index: 2;
+  position: absolute;
+  content: "";
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  background: rgba(200, 200, 255, 0.4);
+  pointer-events: none;
+}
+
+.ProseMirror table .column-resize-handle {
+  position: absolute;
+  right: -2px;
+  top: 0;
+  bottom: -2px;
+  width: 4px;
+  background-color: #adf;
+  pointer-events: none;
+}
+
+/* Blockquote styling */
+.ProseMirror blockquote {
+  border-left: 4px solid #d1d5db;
+  padding-left: 1em;
+  margin: 1em 0;
+  color: #6b7280;
+  font-style: italic;
+}
+
+.ProseMirror blockquote p:first-of-type::before {
+  content: '"';
+  font-size: 2em;
+  color: #9ca3af;
+  margin-right: 0.25em;
+  vertical-align: -0.4em;
+  line-height: 0;
+}
+
+.ProseMirror blockquote p:last-of-type::after {
+  content: '"';
+  font-size: 2em;
+  color: #9ca3af;
+  margin-left: 0.25em;
+  vertical-align: -0.4em;
+  line-height: 0;
+}
+
+/* Code block styling - code editor appearance */
+.ProseMirror pre {
+  background: #1e1e1e;
+  border-radius: 0.5rem;
+  color: #d4d4d4;
+  font-family: "JetBrains Mono", "Monaco", "Menlo", "Ubuntu Mono", "Consolas",
+    monospace;
+  padding: 1rem;
+  margin: 1em 0;
+  overflow-x: auto;
+  border: 1px solid #3e3e3e;
+  position: relative;
+}
+
+.ProseMirror pre::before {
+  content: "CODE";
+  position: absolute;
+  top: 0.5rem;
+  right: 1rem;
+  font-size: 0.65rem;
+  color: #6b7280;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.ProseMirror code {
+  background-color: rgba(97, 97, 97, 0.1);
+  border-radius: 0.4rem;
+  color: #616161;
+  font-size: 0.8rem;
+  padding: 0.2em 0.4em;
+  font-family: "JetBrains Mono", "Monaco", "Menlo", "Ubuntu Mono", monospace;
+}
+
+.ProseMirror pre code {
+  background-color: transparent;
+  border-radius: 0;
+  color: #d4d4d4;
+  font-size: 0.875rem;
+  padding: 0;
+  font-family: inherit;
+  line-height: 1.6;
+}
+
+/* Todo List (Task List) styling */
+.ProseMirror ul[data-type="taskList"] {
+  list-style: none;
+  padding: 0;
+  margin: 1em 0;
+}
+
+.ProseMirror ul[data-type="taskList"] li {
+  display: flex;
+  align-items: flex-start;
+  padding: 0.25em 0;
+}
+
+.ProseMirror ul[data-type="taskList"] li > label {
+  flex: 0 0 auto;
+  margin-right: 0.5rem;
+  user-select: none;
+  cursor: pointer;
+}
+
+.ProseMirror ul[data-type="taskList"] li > div {
+  flex: 1 1 auto;
+}
+
+.ProseMirror ul[data-type="taskList"] input[type="checkbox"] {
+  cursor: pointer;
+  width: 1.25em;
+  height: 1.25em;
+  margin-top: 0.125em;
+  border: 2px solid #6b7280;
+  border-radius: 0.25rem;
+  background: white;
+  transition: all 0.2s;
+}
+
+.ProseMirror ul[data-type="taskList"] input[type="checkbox"]:checked {
+  background: #2563eb;
+  border-color: #2563eb;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='white'%3E%3Cpath fill-rule='evenodd' d='M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z'/%3E%3C/svg%3E");
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+.ProseMirror ul[data-type="taskList"] li[data-checked="true"] > div {
+  opacity: 0.6;
+  text-decoration: line-through;
+}
+
+/* Bullet List styling */
+.ProseMirror ul:not([data-type="taskList"]) {
+  list-style-type: disc;
+  padding-left: 1.5em;
+  margin: 1em 0;
+}
+
+.ProseMirror ul:not([data-type="taskList"]) li {
+  margin: 0.5em 0;
+  padding-left: 0.25em;
+}
+
+.ProseMirror ul:not([data-type="taskList"]) li::marker {
+  color: #4b5563;
+  font-weight: 600;
+}
+
+/* Numbered List styling */
+.ProseMirror ol {
+  list-style-type: decimal;
+  padding-left: 1.5em;
+  margin: 1em 0;
+}
+
+.ProseMirror ol li {
+  margin: 0.5em 0;
+  padding-left: 0.25em;
+}
+
+.ProseMirror ol li::marker {
+  color: #4b5563;
+  font-weight: 600;
+}
+
+/* Nested lists */
+.ProseMirror ul ul,
+.ProseMirror ol ol,
+.ProseMirror ul ol,
+.ProseMirror ol ul {
+  margin-top: 0.25em;
+  margin-bottom: 0.25em;
+}
+
+/* Dark mode table styling */
+.dark .ProseMirror table td,
+.dark .ProseMirror table th {
+  border-color: #4b5563;
+}
+
+.dark .ProseMirror table th {
+  background-color: #1f2937;
+}
+
+/* Dark mode blockquote styling */
+.dark .ProseMirror blockquote {
+  border-left-color: #6b7280;
+  color: #9ca3af;
+}
+
+/* Dark mode code block styling */
+.dark .ProseMirror pre {
+  background: #1e1e1e;
+  border-color: #3e3e3e;
+  color: #d4d4d4;
+}
+
+.dark .ProseMirror pre::before {
+  color: #9ca3af;
+}
+
+.dark .ProseMirror code {
+  background-color: rgba(255, 255, 255, 0.1);
+  color: #d1d5db;
+}
+
+.dark .ProseMirror pre code {
+  color: #d4d4d4;
+}
+
+/* Dark mode todo list styling */
+.dark .ProseMirror ul[data-type="taskList"] input[type="checkbox"] {
+  border-color: #6b7280;
+  background: #1f2937;
+}
+
+.dark .ProseMirror ul[data-type="taskList"] input[type="checkbox"]:checked {
+  background: #2563eb;
+  border-color: #2563eb;
+}
+
+/* Dark mode bullet and numbered list styling */
+.dark .ProseMirror ul:not([data-type="taskList"]) li::marker,
+.dark .ProseMirror ol li::marker {
+  color: #9ca3af;
+}
+
+/* Mention styling */
+.ProseMirror .mention {
+  @apply bg-blue-100 text-blue-800 px-1 py-0.5 rounded text-sm font-medium;
+  @apply border border-blue-200;
+}
+
+.ProseMirror .mention:hover {
+  @apply bg-blue-200;
+}
+
+/* Dark mode mention styling */
+.dark .ProseMirror .mention {
+  @apply bg-blue-900 text-blue-200 border-blue-700;
+}
+
+.dark .ProseMirror .mention:hover {
+  @apply bg-blue-800;
+}
+
+/* Comment mark styling */
+.comment-mark {
+  background-color: rgba(250, 204, 21, 0.2);
+  border-bottom: 2px solid #facc15;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.comment-mark:hover {
+  background-color: rgba(250, 204, 21, 0.3);
+}
+
+/* Dark mode comment mark styling */
+.dark .comment-mark {
+  background-color: rgba(250, 204, 21, 0.15);
+  border-bottom-color: #facc15;
+}
+
+.dark .comment-mark:hover {
+  background-color: rgba(250, 204, 21, 0.25);
+}
+
+/* ... */
+html,
+hody {
+  height: 100%;
+  font-family: "DM Sans", serif !important;
+}
+em-emoji-picker {
+  width: 350px;
+  height: 400px;
+  resize: horizontal;
+  overflow: auto;
+}
+
+/* Custom scrollbar styles */
+.scrollbar {
+  overflow-y: auto;
+  scrollbar-width: thin; /* Firefox */
+  scrollbar-color: rgba(176, 174, 174, 0.7) #ddd; /* Firefox */
+  transition: scrollbar-color 0.3s ease, scrollbar-width 0.3s ease;
+}
+
+.scrollbar::-webkit-scrollbar {
+  width: 8px; /* Scrollbar width */
+}
+
+.scrollbar::-webkit-scrollbar-track {
+  background: #ddd; /* Track color */
+}
+
+.scrollbar::-webkit-scrollbar-thumb {
+  background-color: gray; /* Thumb color */
+  border-radius: 100%; /* Rounded edges */
+  transition: background-color 0.3s ease; /* Smooth color change */
+}
+
+.scrollbar:hover::-webkit-scrollbar-thumb {
+  background-color: darkgray; /* Hover effect */
+}
+
+/* Horizontal scrollbar for toolbar on mobile */
+.toolbar-scroll {
+  scrollbar-width: thin; /* Firefox */
+  scrollbar-color: rgba(156, 163, 175, 0.5) transparent; /* Firefox */
+}
+
+.toolbar-scroll::-webkit-scrollbar {
+  height: 4px; /* Scrollbar height for horizontal */
+}
+
+.toolbar-scroll::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.toolbar-scroll::-webkit-scrollbar-thumb {
+  background-color: rgba(156, 163, 175, 0.5);
+  border-radius: 2px;
+}
+
+.toolbar-scroll::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(107, 114, 128, 0.7);
+}
+
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+
+    --foreground: 0 0% 3.9%;
+
+    --card: 0 0% 100%;
+
+    --card-foreground: 0 0% 3.9%;
+
+    --popover: 0 0% 100%;
+
+    --popover-foreground: 0 0% 3.9%;
+
+    --primary: 0 0% 9%;
+
+    --primary-foreground: 0 0% 98%;
+
+    --secondary: 0 0% 96.1%;
+
+    --secondary-foreground: 0 0% 9%;
+
+    --muted: 0 0% 96.1%;
+
+    --muted-foreground: 0 0% 45.1%;
+
+    --accent: 0 0% 96.1%;
+
+    --accent-foreground: 0 0% 9%;
+
+    --destructive: 0 84.2% 60.2%;
+
+    --destructive-foreground: 0 0% 98%;
+
+    --border: 0 0% 89.8%;
+
+    --input: 0 0% 89.8%;
+
+    --ring: 0 0% 3.9%;
+
+    --chart-1: 12 76% 61%;
+
+    --chart-2: 173 58% 39%;
+
+    --chart-3: 197 37% 24%;
+
+    --chart-4: 43 74% 66%;
+
+    --chart-5: 27 87% 67%;
+
+    --radius: 0.5rem;
+
+    --sidebar-background: 0 0% 98%;
+
+    --sidebar-foreground: 240 5.3% 26.1%;
+
+    --sidebar-primary: 240 5.9% 10%;
+
+    --sidebar-primary-foreground: 0 0% 98%;
+
+    --sidebar-accent: 240 4.8% 95.9%;
+
+    --sidebar-accent-foreground: 240 5.9% 10%;
+
+    --sidebar-border: 220 13% 91%;
+
+    --sidebar-ring: 217.2 91.2% 59.8%;
+  }
+  .dark {
+    --background: 0 0% 3.9%;
+
+    --foreground: 0 0% 98%;
+
+    --card: 0 0% 3.9%;
+
+    --card-foreground: 0 0% 98%;
+
+    --popover: 0 0% 3.9%;
+
+    --popover-foreground: 0 0% 98%;
+
+    --primary: 0 0% 98%;
+
+    --primary-foreground: 0 0% 9%;
+
+    --secondary: 0 0% 14.9%;
+
+    --secondary-foreground: 0 0% 98%;
+
+    --muted: 0 0% 14.9%;
+
+    --muted-foreground: 0 0% 63.9%;
+
+    --accent: 0 0% 14.9%;
+
+    --accent-foreground: 0 0% 98%;
+
+    --destructive: 0 62.8% 30.6%;
+
+    --destructive-foreground: 0 0% 98%;
+
+    --border: 0 0% 14.9%;
+
+    --input: 0 0% 14.9%;
+
+    --ring: 0 0% 83.1%;
+
+    --chart-1: 220 70% 50%;
+
+    --chart-2: 160 60% 45%;
+
+    --chart-3: 30 80% 55%;
+
+    --chart-4: 280 65% 60%;
+
+    --chart-5: 340 75% 55%;
+
+    --sidebar-background: 240 5.9% 10%;
+
+    --sidebar-foreground: 240 4.8% 95.9%;
+
+    --sidebar-primary: 224.3 76.3% 48%;
+
+    --sidebar-primary-foreground: 0 0% 100%;
+
+    --sidebar-accent: 240 3.7% 15.9%;
+
+    --sidebar-accent-foreground: 240 4.8% 95.9%;
+
+    --sidebar-border: 240 3.7% 15.9%;
+
+    --sidebar-ring: 217.2 91.2% 59.8%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+
+  button[data-placeholder] {
+    @apply text-muted-foreground;
+  }
+}
