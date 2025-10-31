@@ -57,7 +57,7 @@ const SignIn = () => {
     if (isPending) return;
 
     mutate(values, {
-      onSuccess: (data) => {
+      onSuccess: async (data) => {
         const user = data.user;
         const token = (data as any).token;
         if (token) {
@@ -69,10 +69,13 @@ const SignIn = () => {
         console.log(user);
 
         // Invalidate and refetch auth query to update authentication state
-        queryClient.invalidateQueries({ queryKey: ["authUser"] });
-
-        const decodedUrl = returnUrl ? decodeURIComponent(returnUrl) : null;
-        navigate(decodedUrl || `/workspace/${user.currentWorkspace}`);
+        await queryClient.invalidateQueries({ queryKey: ["authUser"] });
+        
+        // Small delay to ensure query has refetched
+        setTimeout(() => {
+          const decodedUrl = returnUrl ? decodeURIComponent(returnUrl) : null;
+          navigate(decodedUrl || `/workspace/${user.currentWorkspace}`);
+        }, 100);
       },
       onError: (error) => {
         toast({
