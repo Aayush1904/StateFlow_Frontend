@@ -1,7 +1,4 @@
 import { Plus } from "lucide-react";
-import { useEffect } from "react";
-import { useSearchParams, useNavigate } from "react-router-dom";
-import { useQueryClient } from "@tanstack/react-query";
 
 import { Button } from "@/components/ui/button";
 import useCreateProjectDialog from "@/hooks/use-create-project-dialog";
@@ -15,34 +12,6 @@ import ActivityFeed from "@/components/workspace/activity-feed";
 
 const WorkspaceDashboard = () => {
   const { onOpen } = useCreateProjectDialog();
-  const [searchParams] = useSearchParams();
-  const navigate = useNavigate();
-  const queryClient = useQueryClient();
-
-  // Extract token from URL if present (from Google OAuth redirect)
-  useEffect(() => {
-    const token = searchParams.get('token');
-    if (token) {
-      localStorage.setItem('token', token);
-      
-      // Extract userId from token and store it
-      try {
-        const payload = JSON.parse(atob(token.split('.')[1]));
-        if (payload._id) {
-          localStorage.setItem('userId', payload._id);
-        }
-      } catch (error) {
-        console.error('Failed to parse token:', error);
-      }
-      
-      // Invalidate auth queries to trigger refetch with new token
-      queryClient.invalidateQueries({ queryKey: ["authUser"] });
-      
-      // Remove token from URL for security
-      searchParams.delete('token');
-      navigate({ search: searchParams.toString() }, { replace: true });
-    }
-  }, [searchParams, navigate, queryClient]);
   return (
     <main className="flex flex-1 flex-col py-4 md:pt-3">
       <div className="flex items-center justify-between space-y-2 mb-6">

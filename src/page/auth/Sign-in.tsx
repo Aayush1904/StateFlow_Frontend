@@ -68,14 +68,15 @@ const SignIn = () => {
         }
         console.log(user);
 
-        // Invalidate and refetch auth query to update authentication state
+        // Invalidate and wait for refetch to complete
         await queryClient.invalidateQueries({ queryKey: ["authUser"] });
         
-        // Small delay to ensure query has refetched
-        setTimeout(() => {
-          const decodedUrl = returnUrl ? decodeURIComponent(returnUrl) : null;
-          navigate(decodedUrl || `/workspace/${user.currentWorkspace}`);
-        }, 100);
+        // Wait for the auth query to refetch and get the updated user data
+        await queryClient.refetchQueries({ queryKey: ["authUser"] });
+        
+        // Navigate after auth state is confirmed
+        const decodedUrl = returnUrl ? decodeURIComponent(returnUrl) : null;
+        navigate(decodedUrl || `/workspace/${user.currentWorkspace}`);
       },
       onError: (error) => {
         toast({
