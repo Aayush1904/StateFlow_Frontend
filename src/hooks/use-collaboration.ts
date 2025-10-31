@@ -102,7 +102,7 @@ export const useCollaboration = ({ workspaceId, pageId, token }: UseCollaboratio
       newSocket.on('connect', () => {
         console.log('[Collaboration] ✅ Connected to collaboration server, socket ID:', newSocket.id);
         setIsConnected(true);
-        currentSocketIdRef.current = newSocket.id || null;
+        currentSocketIdRef.current = (newSocket.id || null) as string | null;
         
         // Join workspace
         console.log('[Collaboration] Joining workspace:', workspaceId);
