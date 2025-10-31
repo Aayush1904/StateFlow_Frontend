@@ -17,7 +17,7 @@ import {
   useSidebar,
 } from "@/components/ui/sidebar";
 import { Link, useLocation } from "react-router-dom";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import useWorkspaceId from "@/hooks/use-workspace-id";
 import { useAuthContext } from "@/context/auth-provider";
 import { Permissions } from "@/constant";
@@ -40,11 +40,17 @@ export function NavMain() {
   const location = useLocation();
 
   const pathname = location.pathname;
+  const prevPathnameRef = useRef<string>(pathname);
 
-  // Auto-close sidebar on mobile after navigation
+  // Auto-close sidebar on mobile after navigation (only when pathname actually changes)
   useEffect(() => {
-    if (isMobile) {
+    // Only close if pathname actually changed (not on initial mount)
+    if (isMobile && prevPathnameRef.current !== pathname) {
       setOpenMobile(false);
+      prevPathnameRef.current = pathname;
+    } else {
+      // Update ref on initial mount
+      prevPathnameRef.current = pathname;
     }
   }, [pathname, isMobile, setOpenMobile]);
 

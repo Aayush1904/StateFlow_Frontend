@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Textarea } from '@/components/ui/textarea';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogTrigger } from '@/components/ui/dialog';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import {
     History,
@@ -144,6 +144,9 @@ const PageVersionHistory: React.FC<PageVersionHistoryProps> = ({ pageId, onVersi
                         <DialogContent>
                             <DialogHeader>
                                 <DialogTitle>Create New Version</DialogTitle>
+                                <DialogDescription>
+                                    Create a snapshot of the current page state with an optional change description
+                                </DialogDescription>
                             </DialogHeader>
                             <div className="space-y-4">
                                 <div>
@@ -184,6 +187,9 @@ const PageVersionHistory: React.FC<PageVersionHistoryProps> = ({ pageId, onVersi
                             <DialogContent className="max-w-4xl">
                                 <DialogHeader>
                                     <DialogTitle>Compare Versions</DialogTitle>
+                                    <DialogDescription>
+                                        Compare the content between two selected versions of this page
+                                    </DialogDescription>
                                 </DialogHeader>
                                 <div className="space-y-4">
                                     {isComparing ? (

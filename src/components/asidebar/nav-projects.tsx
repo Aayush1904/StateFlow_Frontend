@@ -30,7 +30,7 @@ import useConfirmDialog from "@/hooks/use-confirm-dialog";
 import { Button } from "../ui/button";
 import { Permissions } from "@/constant";
 import PermissionsGuard from "../resuable/permission-guard";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import useGetProjectsInWorkspaceQuery from "@/hooks/api/use-get-projects";
 import { PaginationType } from "@/types/api.type";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
@@ -49,10 +49,17 @@ export function NavProjects() {
   const { onOpen } = useCreateProjectDialog();
   const { context, open, onOpenDialog, onCloseDialog } = useConfirmDialog();
 
-  // Auto-close sidebar on mobile after navigation
+  const prevPathnameRef = useRef<string>(pathname);
+
+  // Auto-close sidebar on mobile after navigation (only when pathname actually changes)
   useEffect(() => {
-    if (isMobile) {
+    // Only close if pathname actually changed (not on initial mount)
+    if (isMobile && prevPathnameRef.current !== pathname) {
       setOpenMobile(false);
+      prevPathnameRef.current = pathname;
+    } else {
+      // Update ref on initial mount
+      prevPathnameRef.current = pathname;
     }
   }, [pathname, isMobile, setOpenMobile]);
 
