@@ -75,7 +75,9 @@ const SignIn = () => {
         
         // Navigate immediately - ProtectedRoute will handle auth state
         const decodedUrl = returnUrl ? decodeURIComponent(returnUrl) : null;
-        const targetPath = decodedUrl || `/workspace/${user.currentWorkspace?._id || user.currentWorkspace}`;
+        // currentWorkspace from login response is always a string (workspace ID)
+        const workspaceId = user.currentWorkspace || '';
+        const targetPath = decodedUrl || (workspaceId ? `/workspace/${workspaceId}` : '/');
         
         // Use replace to avoid back button issues
         navigate(targetPath, { replace: true });
