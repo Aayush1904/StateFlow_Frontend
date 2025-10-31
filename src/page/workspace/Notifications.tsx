@@ -1,18 +1,10 @@
 import React, { useState } from 'react';
-import { useQuery, useMutation } from '@tanstack/react-query';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
-import { X, CheckCheck, Trash2, ArrowLeft } from 'lucide-react';
+import { X, CheckCheck, ArrowLeft } from 'lucide-react';
 import { toast } from '@/hooks/use-toast';
 import { getAvatarColor, getAvatarFallbackText } from '@/lib/helper';
-import {
-    getUserNotificationsQueryFn,
-    markNotificationAsReadMutationFn,
-    markAllNotificationsAsReadMutationFn,
-    deleteNotificationMutationFn
-} from '@/lib/api';
 import { format } from 'date-fns';
 import { useNavigate, useParams, Link } from 'react-router-dom';
 import { useNotifications } from '@/context/notification-provider';

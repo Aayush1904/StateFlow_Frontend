@@ -5,7 +5,6 @@ import {
   updateCommentMutationFn,
   deleteCommentMutationFn,
   resolveCommentMutationFn,
-  type CommentType,
 } from '@/lib/api';
 import { useToast } from '@/hooks/use-toast';
 

@@ -1,7 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 import { searchQueryFn, type SearchPayloadType } from '@/lib/api';
 import { useDebounce } from '@/hooks/use-debounce';
-import { useState } from 'react';
 
 interface UseSearchParams {
   workspaceId: string;
@@ -41,12 +40,6 @@ export const useSearch = ({
     },
     enabled: enabled && !!workspaceId && debouncedQuery.trim().length > 0,
     staleTime: 1000 * 60 * 5, // 5 minutes
-    onError: (err) => {
-      console.error('Search error:', err);
-    },
-    onSuccess: (data) => {
-      console.log('Search success:', data);
-    },
   });
 
   return {

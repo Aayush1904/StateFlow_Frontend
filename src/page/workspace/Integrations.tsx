@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { IntegrationsList } from '@/components/workspace/integrations/integrations-list';
 import { GitHubIssuesSync } from '@/components/workspace/integrations/github-issues-sync';
