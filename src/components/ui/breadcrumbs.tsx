@@ -53,7 +53,7 @@ const Breadcrumbs: React.FC<BreadcrumbsProps> = ({ items, className }) => {
 
 // Hook to generate breadcrumbs for different pages
 export const useBreadcrumbs = () => {
-    const { workspaceId, projectId, pageId } = useParams();
+    const { workspaceId } = useParams();
 
     const getPagesBreadcrumbs = (): BreadcrumbItem[] => [
         {

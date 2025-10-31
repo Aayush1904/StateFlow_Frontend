@@ -3,11 +3,9 @@ import { useQuery } from '@tanstack/react-query';
 import { getAllWorkspacesUserIsMemberQueryFn } from '@/lib/api';
 import { Card, CardContent } from '@/components/ui/card';
 import { Building2, Users } from 'lucide-react';
-import { useAuthContext } from '@/context/auth-provider';
 import { useSidebar } from '@/components/ui/sidebar';
 
 const WorkspaceStats: React.FC = () => {
-    const { user } = useAuthContext();
     const { state } = useSidebar();
 
     const { data: workspacesData, isLoading } = useQuery({

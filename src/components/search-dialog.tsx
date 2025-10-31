@@ -17,7 +17,6 @@ import { formatDistanceToNow } from 'date-fns';
 import { Badge } from '@/components/ui/badge';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import { Checkbox } from '@/components/ui/checkbox';
-import { motion, AnimatePresence } from 'framer-motion';
 
 interface SearchDialogProps {
     open: boolean;

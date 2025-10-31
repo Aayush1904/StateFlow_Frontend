@@ -15,7 +15,6 @@ import SearchDialog from "@/components/search-dialog";
 import { Button } from "./ui/button";
 import { Search } from "lucide-react";
 import { useState, useEffect } from "react";
-import { ThemeToggle } from "./theme-toggle";
 import { ThemeSelector } from "./theme-selector";
 
 const Header = () => {

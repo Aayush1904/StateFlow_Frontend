@@ -14,7 +14,6 @@ import {
     DropdownMenuSeparator,
 } from '@/components/ui/dropdown-menu';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { Separator } from '@/components/ui/separator';
 import { Link } from 'react-router-dom';
 import useWorkspaceId from '@/hooks/use-workspace-id';
 
