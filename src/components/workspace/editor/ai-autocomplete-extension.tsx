@@ -18,17 +18,24 @@ async function getAISuggestion(context: string): Promise<string> {
   try {
     const { AI_API } = await import('@/lib/axios-client');
     
-    // Get last 200 characters for context
-    const textContext = context.slice(-200);
+    // Get last 150 characters for faster processing
+    const textContext = context.slice(-150);
     
-    const response = await AI_API.post('/ai/assist', {
+    // Add timeout for quick failure
+    const timeoutPromise = new Promise((_, reject) =>
+      setTimeout(() => reject(new Error('Request timeout')), 3000)
+    );
+
+    const responsePromise = AI_API.post('/ai/assist', {
       action: 'complete',
       text: textContext,
     });
     
+    const response = await Promise.race([responsePromise, timeoutPromise]) as any;
     return response.data.result || '';
   } catch (error) {
-    console.error('AI autocomplete error:', error);
+    // Silently fail to avoid disrupting user experience
+    console.warn('AI autocomplete error:', error);
     return '';
   }
 }
@@ -38,8 +45,8 @@ export const AIAutocomplete = Extension.create({
 
   addOptions() {
     return {
-      debounceMs: 3000, // Wait 3 seconds after user stops typing (to avoid rate limits)
-      minChars: 20, // Minimum 20 characters before suggesting (to avoid unnecessary calls)
+      debounceMs: 1500, // Wait 1.5 seconds after user stops typing (optimized for speed)
+      minChars: 15, // Minimum 15 characters before suggesting
       enabled: false, // Start disabled by default
     };
   },

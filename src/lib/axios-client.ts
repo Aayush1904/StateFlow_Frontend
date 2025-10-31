@@ -11,10 +11,10 @@ const options = {
 
 const API = axios.create(options);
 
-// Create a separate instance for AI requests with longer timeout
+// Create a separate instance for AI requests with optimized timeout
 const AI_API = axios.create({
   ...options,
-  timeout: 60000, // 60 seconds for AI requests
+  timeout: 8000, // 8 seconds for AI requests (fast fail for quick UX)
 });
 
 // Request interceptor to add JWT token
