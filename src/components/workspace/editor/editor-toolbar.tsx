@@ -20,9 +20,6 @@ import {
     Code2,
     Undo,
     Redo,
-    AlignLeft,
-    AlignCenter,
-    AlignRight,
     Table,
     Table2,
     Plus,
@@ -102,20 +99,12 @@ const EditorToolbar: React.FC<EditorToolbarProps> = ({ editor }) => {
         editor.chain().focus().insertTable({ rows: 3, cols: 3, withHeaderRow: true }).run();
     };
 
-    const addColumnBefore = () => {
-        editor.chain().focus().addColumnBefore().run();
-    };
-
     const addColumnAfter = () => {
         editor.chain().focus().addColumnAfter().run();
     };
 
     const deleteColumn = () => {
         editor.chain().focus().deleteColumn().run();
-    };
-
-    const addRowBefore = () => {
-        editor.chain().focus().addRowBefore().run();
     };
 
     const addRowAfter = () => {

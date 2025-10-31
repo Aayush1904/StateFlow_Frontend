@@ -2,10 +2,8 @@ import React, { useState, useMemo } from 'react';
 import {
     DndContext,
     DragEndEvent,
-    DragOverEvent,
     DragOverlay,
     DragStartEvent,
-    PointerSensor,
     MouseSensor,
     TouchSensor,
     useSensor,
@@ -14,13 +12,9 @@ import {
 } from '@dnd-kit/core';
 import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { Plus, MoreHorizontal, GitBranch, RefreshCw } from 'lucide-react';
+import { GitBranch, RefreshCw } from 'lucide-react';
 
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { Switch } from '@/components/ui/switch';
 import { Label } from '@/components/ui/label';
 import { TaskType } from '@/types/api.type';
@@ -28,12 +22,10 @@ import { TaskStatusEnum } from '@/constant';
 import { getAllTasksQueryFn, editTaskMutationFn } from '@/lib/api';
 import useWorkspaceId from '@/hooks/use-workspace-id';
 import { toast } from '@/hooks/use-toast';
-import { format } from 'date-fns';
 
 import KanbanColumn from './kanban-column';
 import KanbanCard from './kanban-card';
 import GitHubIssueCard from './github-issue-card';
-import CreateTaskDialog from '../task/create-task-dialog';
 import { useGitHubIssues } from '@/hooks/use-github-issues';
 
 interface KanbanBoardProps {
@@ -67,8 +59,8 @@ const KanbanBoard: React.FC<KanbanBoardProps> = ({ projectId }) => {
         // Touch (mobile)
         useSensor(TouchSensor, {
             // Small long-press delay helps avoid conflict with scrolling
-            pressDelay: 150,
             activationConstraint: {
+                delay: 150,
                 tolerance: 8,
             },
         })
@@ -100,8 +92,9 @@ const KanbanBoard: React.FC<KanbanBoardProps> = ({ projectId }) => {
         };
 
         tasks.forEach((task) => {
-            if (grouped[task.status as TaskStatusEnum]) {
-                grouped[task.status as TaskStatusEnum].push(task);
+            const statusKey = task.status as keyof typeof grouped;
+            if (grouped[statusKey]) {
+                grouped[statusKey].push(task);
             }
         });
 
@@ -141,7 +134,7 @@ const KanbanBoard: React.FC<KanbanBoardProps> = ({ projectId }) => {
         if (!over) return;
 
         const taskId = active.id as string;
-        const newStatus = over.id as TaskStatusEnum;
+        const newStatus = over.id as string;
         const task = tasks.find((t) => t._id === taskId);
 
         if (!task || task.status === newStatus) return;
@@ -155,14 +148,14 @@ const KanbanBoard: React.FC<KanbanBoardProps> = ({ projectId }) => {
                 title: task.title,
                 description: task.description || '',
                 priority: task.priority,
-                status: newStatus,
-                assignedTo: task.assignedTo?._id || null,
+                status: newStatus as "BACKLOG" | "TODO" | "IN_PROGRESS" | "IN_REVIEW" | "DONE",
+                assignedTo: task.assignedTo?._id || undefined,
                 dueDate: task.dueDate || '',
             },
         });
     };
 
-    const getStatusInfo = (status: TaskStatusEnum) => {
+    const getStatusInfo = (status: typeof TaskStatusEnum[keyof typeof TaskStatusEnum]) => {
         switch (status) {
             case TaskStatusEnum.BACKLOG:
                 return {

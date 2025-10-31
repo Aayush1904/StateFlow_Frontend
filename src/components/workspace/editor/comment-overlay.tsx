@@ -26,8 +26,6 @@ export const CommentOverlay: React.FC<CommentOverlayProps> = ({
     onEdit,
     onDelete,
     onResolve,
-    workspaceId,
-    pageId,
 }) => {
     const [selectedText, setSelectedText] = useState<{ from: number; to: number; position?: { top: number; left: number } } | null>(null);
     const [showCommentForm, setShowCommentForm] = useState(false);
@@ -85,9 +83,6 @@ export const CommentOverlay: React.FC<CommentOverlayProps> = ({
         try {
             // Get coordinates at the start position of the comment
             const coords = editor.view.coordsAtPos(comment.from);
-            const editorElement = editor.view.dom;
-            const editorRect = editorElement.getBoundingClientRect();
-            const overlayRect = overlayRef.current.getBoundingClientRect();
 
             // Calculate position relative to viewport (for portal rendering)
             const viewportLeft = coords.right + 10; // Position to the right of the text
@@ -110,7 +105,6 @@ export const CommentOverlay: React.FC<CommentOverlayProps> = ({
 
     // Filter out resolved comments and group by position
     const activeComments = comments.filter((c) => !c.resolved);
-    const resolvedComments = comments.filter((c) => c.resolved);
 
     // Apply comment marks to the editor content
     useEffect(() => {
@@ -292,7 +286,7 @@ export const CommentOverlay: React.FC<CommentOverlayProps> = ({
                     // Try to scroll to comment position
                     try {
                         if (editor) {
-                            const coords = editor.view.coordsAtPos(comment.from);
+                            editor.view.coordsAtPos(comment.from); // Keep for side effects
                             editor.view.dom.scrollIntoView({ behavior: 'smooth', block: 'center' });
                             editor.chain().setTextSelection({ from: comment.from, to: comment.to }).run();
                         }

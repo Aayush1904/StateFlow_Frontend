@@ -1,11 +1,10 @@
-import React, { forwardRef, useEffect, useImperativeHandle, useState } from 'react';
+import { forwardRef, useEffect, useImperativeHandle, useState } from 'react';
 import { MentionOptions } from '@tiptap/extension-mention';
 import { ReactRenderer } from '@tiptap/react';
 import tippy from 'tippy.js';
 import 'tippy.js/dist/tippy.css';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Card, CardContent } from '@/components/ui/card';
-import { Loader } from 'lucide-react';
 import useGetWorkspaceMembers from '@/hooks/api/use-get-workspace-members';
 import useWorkspaceId from '@/hooks/use-workspace-id';
 import { getAvatarColor, getAvatarFallbackText } from '@/lib/helper';
@@ -124,10 +123,13 @@ export const useMentionExtension = (): MentionOptions => {
     // The items function will handle empty members gracefully
 
     return {
+        renderHTML: () => ['span', { class: 'mention' }, 0],
+        deleteTriggerWithBackspace: true,
+        suggestions: [],
         HTMLAttributes: {
             class: 'mention',
         },
-        renderText({ options, node }) {
+        renderText({ node }) {
             return `@${node.attrs.label ?? node.attrs.id}`;
         },
         suggestion: {

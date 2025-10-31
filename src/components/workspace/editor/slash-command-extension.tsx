@@ -210,7 +210,7 @@ export const SlashCommand = Extension.create({
                                         console.log('Item command:', item.command);
 
                                         try {
-                                            item.command();
+                                            item.command({});
                                             console.log('Command executed successfully');
                                         } catch (error) {
                                             console.error('Error executing command:', error);
@@ -228,7 +228,7 @@ export const SlashCommand = Extension.create({
                                         console.log('Slash command mousedown', item);
 
                                         try {
-                                            item.command();
+                                            item.command({});
                                             console.log('Command executed successfully via mousedown');
                                         } catch (error) {
                                             console.error('Error executing command via mousedown:', error);

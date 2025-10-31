@@ -1,15 +1,8 @@
 import { Extension } from '@tiptap/core';
 import { Plugin, PluginKey } from '@tiptap/pm/state';
 import { Decoration, DecorationSet } from '@tiptap/pm/view';
-import { aiAssistMutationFn } from '@/lib/api';
 
 const AI_AUTOCOMPLETE_PLUGIN_KEY = new PluginKey('aiAutocomplete');
-
-interface AutocompleteState {
-  suggestion: string;
-  position: number;
-  isLoading: boolean;
-}
 
 let debounceTimer: NodeJS.Timeout | null = null;
 let currentSuggestion: string = '';
@@ -62,14 +55,14 @@ export const AIAutocomplete = Extension.create({
       toggleAIAutocomplete: () => ({ commands }: any) => {
         this.storage.enabled = !this.storage.enabled;
         console.log('AI Autocomplete toggled to:', this.storage.enabled);
-        return true;
+        return commands;
       },
       setAIAutocomplete: (enabled: boolean) => ({ commands }: any) => {
         this.storage.enabled = enabled;
         console.log('AI Autocomplete set to:', this.storage.enabled);
-        return true;
+        return commands;
       },
-    };
+    } as any;
   },
 
   addKeyboardShortcuts() {
@@ -113,7 +106,7 @@ export const AIAutocomplete = Extension.create({
             return DecorationSet.empty;
           },
           
-          apply(tr, oldState) {
+          apply(tr) {
             // If suggestion exists and document changed, show decoration
             if (currentSuggestion && suggestionPosition >= 0) {
               const decoration = Decoration.widget(

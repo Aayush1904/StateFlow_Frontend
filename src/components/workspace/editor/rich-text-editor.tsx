@@ -17,25 +17,7 @@ import { AIFloatingMenu } from './ai-floating-menu';
 import { AIAutocomplete, AIAutocompleteIndicator } from './ai-autocomplete-extension';
 
 import { Button } from '@/components/ui/button';
-import { Separator } from '@/components/ui/separator';
 import {
-    Bold,
-    Italic,
-    Strikethrough,
-    Code,
-    Heading1,
-    Heading2,
-    Heading3,
-    List,
-    ListOrdered,
-    Quote,
-    Minus,
-    Link as LinkIcon,
-    Image as ImageIcon,
-    CheckSquare,
-    Code2,
-    Undo,
-    Redo,
     Save,
     Mic,
     MicOff,
@@ -49,7 +31,6 @@ import EditorToolbar from './editor-toolbar';
 import LiveCursors from './live-cursors';
 import PresenceIndicator from './presence-indicator';
 import { CommentOverlay } from './comment-overlay';
-import { CommentsPanel } from './comments-panel';
 import { useCollaboration, WhiteboardStroke } from '@/hooks/use-collaboration';
 import useWorkspaceId from '@/hooks/use-workspace-id';
 import { useComments } from '@/hooks/use-comments';
@@ -75,7 +56,6 @@ const RichTextEditor: React.FC<RichTextEditorProps> = ({
     content = '',
     onUpdate,
     onSave,
-    placeholder = 'Start writing...',
     className,
     editable = true,
     autoSave = true,
@@ -449,7 +429,7 @@ const RichTextEditor: React.FC<RichTextEditorProps> = ({
                 
                 // Preserve cursor position if possible
                 const currentPos = editor.state.selection.from;
-                editor.commands.setContent(newContent, false);
+                editor.commands.setContent(newContent, { emitUpdate: false });
                 
                 // Try to restore cursor position
                 if (currentPos <= editor.state.doc.content.size) {

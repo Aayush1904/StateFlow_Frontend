@@ -89,7 +89,7 @@ const NewPageEditor: React.FC = () => {
 
     const { mutate: createPage } = useMutation({
         mutationFn: createPageMutationFn,
-        onSuccess: (data) => {
+        onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ['pages', workspaceIdFromHook] });
             toast({
                 title: 'Success',

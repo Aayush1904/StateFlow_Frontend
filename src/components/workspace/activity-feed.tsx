@@ -28,7 +28,6 @@ import {
     DropdownMenuSeparator,
 } from '@/components/ui/dropdown-menu';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { Separator } from '@/components/ui/separator';
 
 import { getActivityFeedQueryFn, ActivityFeedFilters, ActivityType } from '@/lib/api';
 import useWorkspaceId from '@/hooks/use-workspace-id';
@@ -294,7 +293,7 @@ const ActivityFeed: React.FC<ActivityFeedProps> = ({ className }) => {
                 ) : (
                     <ScrollArea className="h-[600px]">
                         <div className="space-y-4">
-                            {activities.map((activity, index) => {
+                            {activities.map((activity) => {
                                 const resourceLink = getResourceLink(activity);
                                 const initials = getAvatarFallbackText(activity.user.name);
                                 const avatarColor = getAvatarColor(activity.user.name);

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
-import { MoreHorizontal, Calendar, User, Pencil, Copy, Trash2 } from 'lucide-react';
+import { MoreHorizontal, Calendar, Pencil, Copy, Trash2 } from 'lucide-react';
 import { format } from 'date-fns';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { motion } from 'framer-motion';
@@ -28,7 +28,6 @@ interface KanbanCardProps {
 const KanbanCard: React.FC<KanbanCardProps> = ({ task, isDragging = false }) => {
     const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
     const [openEditDialog, setOpenEditDialog] = useState(false);
-    const [isDuplicating, setIsDuplicating] = useState(false);
 
     const queryClient = useQueryClient();
     const workspaceId = useWorkspaceId();
@@ -52,11 +51,11 @@ const KanbanCard: React.FC<KanbanCardProps> = ({ task, isDragging = false }) => 
     // Delete mutation
     const { mutate: deleteTask, isPending: isDeleting } = useMutation({
         mutationFn: deleteTaskMutationFn,
-        onSuccess: (data) => {
+        onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ['all-tasks', workspaceId] });
             toast({
                 title: 'Success',
-                description: data.message,
+                description: 'Task deleted successfully',
                 variant: 'success',
             });
             setOpenDeleteDialog(false);
@@ -73,14 +72,13 @@ const KanbanCard: React.FC<KanbanCardProps> = ({ task, isDragging = false }) => 
     // Duplicate mutation
     const { mutate: duplicateTask, isPending: isDuplicatingTask } = useMutation({
         mutationFn: createTaskMutationFn,
-        onSuccess: (data) => {
+        onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ['all-tasks', workspaceId] });
             toast({
                 title: 'Success',
                 description: 'Task duplicated successfully',
                 variant: 'success',
             });
-            setIsDuplicating(false);
         },
         onError: (error) => {
             toast({
@@ -88,7 +86,6 @@ const KanbanCard: React.FC<KanbanCardProps> = ({ task, isDragging = false }) => 
                 description: error.message,
                 variant: 'destructive',
             });
-            setIsDuplicating(false);
         },
     });
 
@@ -113,7 +110,7 @@ const KanbanCard: React.FC<KanbanCardProps> = ({ task, isDragging = false }) => 
         });
     };
 
-    const getPriorityColor = (priority: TaskPriorityEnum) => {
+    const getPriorityColor = (priority: typeof TaskPriorityEnum[keyof typeof TaskPriorityEnum]) => {
         switch (priority) {
             case TaskPriorityEnum.HIGH:
                 return 'bg-red-100 text-red-800 border-red-200';
@@ -217,7 +214,7 @@ const KanbanCard: React.FC<KanbanCardProps> = ({ task, isDragging = false }) => 
                             {task.assignedTo && (
                                 <div className="flex items-center gap-2">
                                     <Avatar className="h-6 w-6">
-                                        <AvatarImage src={task.assignedTo.avatar} />
+                                        <AvatarImage src={task.assignedTo.profilePicture || undefined} />
                                         <AvatarFallback className="text-xs">
                                             {getAssigneeInitials(task.assignedTo.name)}
                                         </AvatarFallback>

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { Link, useParams } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -26,7 +26,6 @@ import { motion } from 'framer-motion';
 
 const PagesList: React.FC = () => {
     const workspaceId = useWorkspaceId();
-    const { workspaceId: paramWorkspaceId } = useParams();
     const queryClient = useQueryClient();
     const [searchTerm, setSearchTerm] = useState('');
     const [deleteDialog, setDeleteDialog] = useState<{ isOpen: boolean; pageId: string; pageTitle: string }>({
@@ -146,70 +145,70 @@ const PagesList: React.FC = () => {
                             transition={{ duration: 0.3, delay: index * 0.05 }}
                             whileHover={{ scale: 1.02, transition: { duration: 0.2 } }}
                         >
-                        <Card className="hover:shadow-md transition-shadow h-full">
-                            <CardHeader className="pb-3">
-                                <div className="flex items-start justify-between">
-                                    <CardTitle className="text-lg line-clamp-2">
-                                        <Link
-                                            to={`/workspace/${workspaceId}/pages/${page._id}`}
-                                            className="hover:text-primary transition-colors"
-                                        >
-                                            {page.title}
-                                        </Link>
-                                    </CardTitle>
-                                    <Badge variant={page.isPublished ? 'default' : 'secondary'}>
-                                        {page.isPublished ? (
-                                            <>
-                                                <Eye className="h-3 w-3 mr-1" />
-                                                Published
-                                            </>
-                                        ) : (
-                                            <>
-                                                <EyeOff className="h-3 w-3 mr-1" />
-                                                Draft
-                                            </>
-                                        )}
-                                    </Badge>
-                                </div>
-                            </CardHeader>
-                            <CardContent className="pt-0">
-                                <div className="space-y-3">
-                                    {/* Content Preview */}
-                                    <p className="text-sm text-muted-foreground line-clamp-3">
-                                        {page.content.replace(/<[^>]*>/g, '') || 'No content yet...'}
-                                    </p>
-
-                                    {/* Metadata */}
-                                    <div className="flex items-center gap-4 text-xs text-muted-foreground">
-                                        <div className="flex items-center gap-1">
-                                            <Calendar className="h-3 w-3" />
-                                            {format(new Date(page.updatedAt), 'MMM d, yyyy')}
-                                        </div>
-                                        <div>
-                                            by {page.updatedBy?.name || 'Unknown'}
-                                        </div>
+                            <Card className="hover:shadow-md transition-shadow h-full">
+                                <CardHeader className="pb-3">
+                                    <div className="flex items-start justify-between">
+                                        <CardTitle className="text-lg line-clamp-2">
+                                            <Link
+                                                to={`/workspace/${workspaceId}/pages/${page._id}`}
+                                                className="hover:text-primary transition-colors"
+                                            >
+                                                {page.title}
+                                            </Link>
+                                        </CardTitle>
+                                        <Badge variant={page.isPublished ? 'default' : 'secondary'}>
+                                            {page.isPublished ? (
+                                                <>
+                                                    <Eye className="h-3 w-3 mr-1" />
+                                                    Published
+                                                </>
+                                            ) : (
+                                                <>
+                                                    <EyeOff className="h-3 w-3 mr-1" />
+                                                    Draft
+                                                </>
+                                            )}
+                                        </Badge>
                                     </div>
+                                </CardHeader>
+                                <CardContent className="pt-0">
+                                    <div className="space-y-3">
+                                        {/* Content Preview */}
+                                        <p className="text-sm text-muted-foreground line-clamp-3">
+                                            {page.content.replace(/<[^>]*>/g, '') || 'No content yet...'}
+                                        </p>
 
-                                    {/* Actions */}
-                                    <div className="flex items-center gap-2 pt-2 border-t">
-                                        <Link to={`/workspace/${workspaceId}/pages/${page._id}`} className="flex-1">
-                                            <Button variant="outline" size="sm" className="w-full">
-                                                <Edit className="h-3 w-3 mr-1" />
-                                                Edit
+                                        {/* Metadata */}
+                                        <div className="flex items-center gap-4 text-xs text-muted-foreground">
+                                            <div className="flex items-center gap-1">
+                                                <Calendar className="h-3 w-3" />
+                                                {format(new Date(page.updatedAt), 'MMM d, yyyy')}
+                                            </div>
+                                            <div>
+                                                by {page.updatedBy?.name || 'Unknown'}
+                                            </div>
+                                        </div>
+
+                                        {/* Actions */}
+                                        <div className="flex items-center gap-2 pt-2 border-t">
+                                            <Link to={`/workspace/${workspaceId}/pages/${page._id}`} className="flex-1">
+                                                <Button variant="outline" size="sm" className="w-full">
+                                                    <Edit className="h-3 w-3 mr-1" />
+                                                    Edit
+                                                </Button>
+                                            </Link>
+                                            <Button
+                                                variant="outline"
+                                                size="sm"
+                                                onClick={() => openDeleteDialog(page._id, page.title)}
+                                                className="text-destructive hover:text-destructive"
+                                            >
+                                                <Trash2 className="h-3 w-3" />
                                             </Button>
-                                        </Link>
-                                        <Button
-                                            variant="outline"
-                                            size="sm"
-                                            onClick={() => openDeleteDialog(page._id, page.title)}
-                                            className="text-destructive hover:text-destructive"
-                                        >
-                                            <Trash2 className="h-3 w-3" />
-                                        </Button>
+                                        </div>
                                     </div>
-                                </div>
-                            </CardContent>
-                        </Card>
+                                </CardContent>
+                            </Card>
                         </motion.div>
                     ))}
                 </div>

@@ -1,4 +1,3 @@
-import { Extension } from '@tiptap/core';
 import { Mark } from '@tiptap/core';
 import { Plugin, PluginKey } from '@tiptap/pm/state';
 import { Decoration, DecorationSet } from '@tiptap/pm/view';
@@ -80,7 +79,7 @@ export const Comment = Mark.create<CommentOptions>({
                 props: {
                     decorations: (state) => {
                         const decorations: Decoration[] = [];
-                        const { doc, selection } = state;
+                        const { doc } = state;
 
                         // Add decorations for comment marks
                         doc.descendants((node, pos) => {

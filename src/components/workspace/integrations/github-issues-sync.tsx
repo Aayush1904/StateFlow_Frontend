@@ -8,11 +8,6 @@ import { toast } from '@/hooks/use-toast';
 import {
     syncGitHubAllDataMutationFn,
     GitHubIssue,
-    GitHubPullRequest,
-    GitHubCommit,
-    GitHubRelease,
-    GitHubContributor,
-    GitHubBranch,
     GitHubRepository,
 } from '@/lib/api';
 import useWorkspaceId from '@/hooks/use-workspace-id';
@@ -27,11 +22,6 @@ export const GitHubIssuesSync: React.FC<GitHubIssuesSyncProps> = ({ integration 
     const workspaceId = useWorkspaceId();
     const [repository, setRepository] = useState<GitHubRepository | null>(null);
     const [issues, setIssues] = useState<GitHubIssue[]>([]);
-    const [pullRequests, setPullRequests] = useState<GitHubPullRequest[]>([]);
-    const [commits, setCommits] = useState<GitHubCommit[]>([]);
-    const [releases, setReleases] = useState<GitHubRelease[]>([]);
-    const [contributors, setContributors] = useState<GitHubContributor[]>([]);
-    const [branches, setBranches] = useState<GitHubBranch[]>([]);
     const [isSynced, setIsSynced] = useState(false);
     const [syncStats, setSyncStats] = useState<{
         issues: number;
@@ -47,11 +37,6 @@ export const GitHubIssuesSync: React.FC<GitHubIssuesSyncProps> = ({ integration 
         onSuccess: (data) => {
             setRepository(data.repository);
             setIssues(data.issues);
-            setPullRequests(data.pullRequests);
-            setCommits(data.commits);
-            setReleases(data.releases);
-            setContributors(data.contributors);
-            setBranches(data.branches);
             setSyncStats(data.synced);
             setIsSynced(true);
             const totalSynced = data.synced.issues + data.synced.pullRequests +

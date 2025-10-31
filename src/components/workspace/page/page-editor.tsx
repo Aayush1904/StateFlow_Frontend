@@ -34,7 +34,7 @@ const PageEditor: React.FC = () => {
 
     const { mutate: updatePage } = useMutation({
         mutationFn: updatePageMutationFn,
-        onSuccess: (data) => {
+        onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ['page', workspaceIdFromHook, pageId] });
             queryClient.invalidateQueries({ queryKey: ['pages', workspaceIdFromHook] });
             toast({
