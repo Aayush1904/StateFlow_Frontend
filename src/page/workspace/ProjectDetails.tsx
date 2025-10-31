@@ -63,10 +63,12 @@ const ProjectDetails = () => {
 
         {/* Task Management Tabs */}
         <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-          <TabsList className="grid w-full grid-cols-3">
-            <TabsTrigger value="kanban">Kanban Board</TabsTrigger>
-            <TabsTrigger value="table">Task Table</TabsTrigger>
-            <TabsTrigger value="timeline">Timeline</TabsTrigger>
+          <TabsList className="w-full overflow-x-auto scrollbar-hide">
+            <div className="flex min-w-max gap-1 sm:grid sm:grid-cols-3 sm:w-full">
+              <TabsTrigger value="kanban" className="whitespace-nowrap flex-shrink-0 sm:flex-shrink">Kanban Board</TabsTrigger>
+              <TabsTrigger value="table" className="whitespace-nowrap flex-shrink-0 sm:flex-shrink">Task Table</TabsTrigger>
+              <TabsTrigger value="timeline" className="whitespace-nowrap flex-shrink-0 sm:flex-shrink">Timeline</TabsTrigger>
+            </div>
           </TabsList>
 
           <TabsContent value="kanban" className="mt-6">

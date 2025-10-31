@@ -14,8 +14,10 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
+  useSidebar,
 } from "@/components/ui/sidebar";
 import { Link, useLocation } from "react-router-dom";
+import { useEffect } from "react";
 import useWorkspaceId from "@/hooks/use-workspace-id";
 import { useAuthContext } from "@/context/auth-provider";
 import { Permissions } from "@/constant";
@@ -28,6 +30,7 @@ type ItemType = {
 
 export function NavMain() {
   const { hasPermission } = useAuthContext();
+  const { isMobile, setOpenMobile } = useSidebar();
 
   const canManageSettings = hasPermission(
     Permissions.MANAGE_WORKSPACE_SETTINGS
@@ -37,6 +40,13 @@ export function NavMain() {
   const location = useLocation();
 
   const pathname = location.pathname;
+
+  // Auto-close sidebar on mobile after navigation
+  useEffect(() => {
+    if (isMobile) {
+      setOpenMobile(false);
+    }
+  }, [pathname, isMobile, setOpenMobile]);
 
   const items: ItemType[] = [
     {

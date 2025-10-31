@@ -31,22 +31,24 @@ const WorkspaceDashboard = () => {
       <WorkspaceAnalytics />
       <div className="mt-4">
         <Tabs defaultValue="projects" className="w-full border rounded-lg p-2">
-          <TabsList className="w-full justify-start border-0 bg-muted px-1 h-12">
-            <TabsTrigger className="py-2" value="projects">
-              Recent Projects
-            </TabsTrigger>
-            <TabsTrigger className="py-2" value="tasks">
-              Recent Tasks
-            </TabsTrigger>
-            <TabsTrigger className="py-2" value="pages">
-              Recent Pages
-            </TabsTrigger>
-            <TabsTrigger className="py-2" value="members">
-              Recent Members
-            </TabsTrigger>
-            <TabsTrigger className="py-2" value="activity">
-              Activity Feed
-            </TabsTrigger>
+          <TabsList className="w-full justify-start border-0 bg-muted px-1 h-12 overflow-x-auto scrollbar-hide">
+            <div className="flex min-w-max gap-1">
+              <TabsTrigger className="py-2 whitespace-nowrap" value="projects">
+                Recent Projects
+              </TabsTrigger>
+              <TabsTrigger className="py-2 whitespace-nowrap" value="tasks">
+                Recent Tasks
+              </TabsTrigger>
+              <TabsTrigger className="py-2 whitespace-nowrap" value="pages">
+                Recent Pages
+              </TabsTrigger>
+              <TabsTrigger className="py-2 whitespace-nowrap" value="members">
+                Recent Members
+              </TabsTrigger>
+              <TabsTrigger className="py-2 whitespace-nowrap" value="activity">
+                Activity Feed
+              </TabsTrigger>
+            </div>
           </TabsList>
           <TabsContent value="projects">
             <RecentProjects />

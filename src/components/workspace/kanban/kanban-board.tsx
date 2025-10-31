@@ -208,32 +208,33 @@ const KanbanBoard: React.FC<KanbanBoardProps> = ({ projectId }) => {
         <div className="w-full space-y-4">
             {/* GitHub Controls */}
             {hasGitHubIntegration && (
-                <div className="flex items-center justify-between p-3 bg-muted/50 rounded-lg border">
-                    <div className="flex items-center gap-3">
-                        <GitBranch className="h-5 w-5 text-blue-600" />
-                        <div>
-                            <p className="text-sm font-medium text-foreground">
+                <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 p-3 bg-muted/50 rounded-lg border">
+                    <div className="flex items-center gap-3 flex-1 min-w-0">
+                        <GitBranch className="h-5 w-5 text-blue-600 flex-shrink-0" />
+                        <div className="min-w-0">
+                            <p className="text-sm font-medium text-foreground truncate">
                                 GitHub Issues Integration
                             </p>
-                            <p className="text-xs text-muted-foreground">
+                            <p className="text-xs text-muted-foreground truncate">
                                 {organization}/{repository} • {githubIssues.length} issues
                             </p>
                         </div>
                     </div>
-                    <div className="flex items-center gap-3">
+                    <div className="flex items-center gap-2 sm:gap-3 flex-shrink-0 w-full sm:w-auto">
                         <div className="flex items-center gap-2">
                             <Switch
                                 id="show-github"
                                 checked={showGitHubIssues}
                                 onCheckedChange={setShowGitHubIssues}
                             />
-                            <Label htmlFor="show-github" className="text-sm cursor-pointer">
+                            <Label htmlFor="show-github" className="text-sm cursor-pointer whitespace-nowrap">
                                 Show Issues
                             </Label>
                         </div>
                         <Button
                             variant="outline"
                             size="sm"
+                            className="flex-shrink-0"
                             onClick={async () => {
                                 try {
                                     await syncIssues();
@@ -251,8 +252,8 @@ const KanbanBoard: React.FC<KanbanBoardProps> = ({ projectId }) => {
                                 }
                             }}
                         >
-                            <RefreshCw className="h-4 w-4 mr-2" />
-                            Sync
+                            <RefreshCw className="h-4 w-4 sm:mr-2" />
+                            <span className="hidden sm:inline">Sync</span>
                         </Button>
                     </div>
                 </div>

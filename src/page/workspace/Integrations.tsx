@@ -35,10 +35,12 @@ const Integrations: React.FC = () => {
             </div>
 
             <Tabs defaultValue="manage" className="w-full">
-                <TabsList>
-                    <TabsTrigger value="manage">Manage Integrations</TabsTrigger>
-                    <TabsTrigger value="github">GitHub</TabsTrigger>
-                    <TabsTrigger value="calendar">Calendar</TabsTrigger>
+                <TabsList className="overflow-x-auto scrollbar-hide">
+                    <div className="flex min-w-max gap-1">
+                        <TabsTrigger value="manage" className="whitespace-nowrap">Manage Integrations</TabsTrigger>
+                        <TabsTrigger value="github" className="whitespace-nowrap">GitHub</TabsTrigger>
+                        <TabsTrigger value="calendar" className="whitespace-nowrap">Calendar</TabsTrigger>
+                    </div>
                 </TabsList>
 
                 <TabsContent value="manage" className="space-y-4">

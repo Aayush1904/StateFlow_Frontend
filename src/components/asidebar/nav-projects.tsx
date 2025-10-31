@@ -30,7 +30,7 @@ import useConfirmDialog from "@/hooks/use-confirm-dialog";
 import { Button } from "../ui/button";
 import { Permissions } from "@/constant";
 import PermissionsGuard from "../resuable/permission-guard";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import useGetProjectsInWorkspaceQuery from "@/hooks/api/use-get-projects";
 import { PaginationType } from "@/types/api.type";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
@@ -45,9 +45,16 @@ export function NavProjects() {
   const queryClient = useQueryClient();
   const workspaceId = useWorkspaceId();
 
-  const { isMobile } = useSidebar();
+  const { isMobile, setOpenMobile } = useSidebar();
   const { onOpen } = useCreateProjectDialog();
   const { context, open, onOpenDialog, onCloseDialog } = useConfirmDialog();
+
+  // Auto-close sidebar on mobile after navigation
+  useEffect(() => {
+    if (isMobile) {
+      setOpenMobile(false);
+    }
+  }, [pathname, isMobile, setOpenMobile]);
 
   const [pageNumber] = useState(1);
   const [pageSize, setPageSize] = useState(5);

@@ -67,17 +67,17 @@ export const GitHubIssuesSync: React.FC<GitHubIssuesSyncProps> = ({ integration 
     return (
         <Card>
             <CardHeader>
-                <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-3">
-                        <Github className="h-5 w-5" />
-                        <div>
-                            <CardTitle>GitHub Repository</CardTitle>
-                            <CardDescription>
+                <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+                    <div className="flex items-center gap-3 flex-1 min-w-0">
+                        <Github className="h-5 w-5 flex-shrink-0" />
+                        <div className="min-w-0">
+                            <CardTitle className="truncate">GitHub Repository</CardTitle>
+                            <CardDescription className="truncate">
                                 {integration.config.organization}/{integration.config.repository}
                             </CardDescription>
                         </div>
                     </div>
-                    <Button onClick={handleSync} disabled={isSyncing} size="sm">
+                    <Button onClick={handleSync} disabled={isSyncing} size="sm" className="flex-shrink-0 w-full sm:w-auto">
                         {isSyncing ? (
                             <>
                                 <Loader2 className="h-4 w-4 mr-2 animate-spin" />
