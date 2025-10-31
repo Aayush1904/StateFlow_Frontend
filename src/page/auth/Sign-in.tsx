@@ -66,17 +66,19 @@ const SignIn = () => {
         if (user._id) {
           localStorage.setItem("userId", user._id);
         }
-        console.log(user);
 
-        // Invalidate and wait for refetch to complete
-        await queryClient.invalidateQueries({ queryKey: ["authUser"] });
+        // Invalidate queries to clear old data
+        queryClient.invalidateQueries({ queryKey: ["authUser"] });
         
-        // Wait for the auth query to refetch and get the updated user data
-        await queryClient.refetchQueries({ queryKey: ["authUser"] });
+        // Set the user data immediately in the query cache to prevent loading state
+        queryClient.setQueryData(["authUser"], { user });
         
-        // Navigate after auth state is confirmed
+        // Navigate immediately - ProtectedRoute will handle auth state
         const decodedUrl = returnUrl ? decodeURIComponent(returnUrl) : null;
-        navigate(decodedUrl || `/workspace/${user.currentWorkspace}`);
+        const targetPath = decodedUrl || `/workspace/${user.currentWorkspace?._id || user.currentWorkspace}`;
+        
+        // Use replace to avoid back button issues
+        navigate(targetPath, { replace: true });
       },
       onError: (error) => {
         toast({

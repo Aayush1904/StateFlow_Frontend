@@ -44,15 +44,46 @@ const ProtectedRoute = () => {
     }
   }, [searchParams, navigate, queryClient]);
 
-  const { data: authData, isLoading, isRefetching } = useAuth();
+  const { data: authData, isLoading, isRefetching, error, isError } = useAuth();
   const user = authData?.user;
+  const hasToken = !!localStorage.getItem('token');
 
-  // Show loading if query is loading or refetching (after token extraction)
-  if (isLoading || (tokenExtractedRef.current && isRefetching)) {
+  // If no token, redirect to login immediately
+  if (!hasToken) {
+    return <Navigate to="/" replace />;
+  }
+
+  // Handle 401/unauthorized errors - clear token and redirect
+  if (isError && error) {
+    const errorStatus = (error as any)?.response?.status;
+    const errorCode = (error as any)?.errorCode;
+    
+    // If 401 or unauthorized, clear token and redirect
+    if (errorStatus === 401 || errorCode === 'UNAUTHORIZED' || (error as any)?.message?.includes('401')) {
+      localStorage.removeItem('token');
+      localStorage.removeItem('userId');
+      return <Navigate to="/" replace />;
+    }
+  }
+
+  // If user exists, render protected routes immediately
+  if (user) {
+    return <Outlet />;
+  }
+
+  // Show loading only if we're actively loading/refetching (with timeout protection)
+  if ((isLoading || isRefetching) && hasToken && !isError) {
     return <DashboardSkeleton />;
   }
-  
-  return user ? <Outlet /> : <Navigate to="/" replace />;
+
+  // If query completed but no user (and not loading), token might be invalid
+  if (hasToken && !isLoading && !isRefetching && !user) {
+    // Give a brief moment for query to complete, then redirect
+    return <Navigate to="/" replace />;
+  }
+
+  // Fallback: show skeleton briefly
+  return <DashboardSkeleton />;
 };
 
 export default ProtectedRoute;
