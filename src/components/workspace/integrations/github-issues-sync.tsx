@@ -70,9 +70,9 @@ export const GitHubIssuesSync: React.FC<GitHubIssuesSyncProps> = ({ integration 
                 <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
                     <div className="flex items-center gap-3 flex-1 min-w-0">
                         <Github className="h-5 w-5 flex-shrink-0" />
-                        <div className="min-w-0">
-                            <CardTitle className="truncate">GitHub Repository</CardTitle>
-                            <CardDescription className="truncate">
+                        <div className="min-w-0 flex-1">
+                            <CardTitle className="break-words">GitHub Repository</CardTitle>
+                            <CardDescription className="break-words">
                                 {integration.config.organization}/{integration.config.repository}
                             </CardDescription>
                         </div>
