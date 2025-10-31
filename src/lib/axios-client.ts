@@ -17,6 +17,34 @@ const AI_API = axios.create({
   timeout: 60000, // 60 seconds for AI requests
 });
 
+// Request interceptor to add JWT token
+API.interceptors.request.use(
+  (config) => {
+    const token = localStorage.getItem('token');
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
+    return config;
+  },
+  (error) => {
+    return Promise.reject(error);
+  }
+);
+
+// Add same request interceptor to AI_API
+AI_API.interceptors.request.use(
+  (config) => {
+    const token = localStorage.getItem('token');
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
+    return config;
+  },
+  (error) => {
+    return Promise.reject(error);
+  }
+);
+
 API.interceptors.response.use(
   (response) => {
     return response;
