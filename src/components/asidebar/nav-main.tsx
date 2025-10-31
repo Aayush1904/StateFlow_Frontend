@@ -8,6 +8,7 @@ import {
   LayoutDashboard,
   FileText,
   Plug,
+  CreditCard,
 } from "lucide-react";
 import {
   SidebarGroup,
@@ -79,6 +80,11 @@ export function NavMain() {
       title: "Integrations",
       url: `/workspace/${workspaceId}/integrations`,
       icon: Plug,
+    },
+    {
+      title: "Pricing",
+      url: `/workspace/${workspaceId}/pricing`,
+      icon: CreditCard,
     },
 
     ...(canManageSettings

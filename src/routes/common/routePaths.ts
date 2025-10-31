@@ -17,6 +17,7 @@ export const PROTECTED_ROUTES = {
   MEMBERS: "/workspace/:workspaceId/members",
   SETTINGS: "/workspace/:workspaceId/settings",
   INTEGRATIONS: "/workspace/:workspaceId/integrations",
+  PRICING: "/workspace/:workspaceId/pricing",
   PROJECT_DETAILS: "/workspace/:workspaceId/project/:projectId",
   TEST_EDITOR: "/workspace/:workspaceId/test-editor",
   NOTIFICATIONS: "/workspace/:workspaceId/notifications",

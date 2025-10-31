@@ -8,6 +8,7 @@ import Settings from "@/page/workspace/Settings";
 import Tasks from "@/page/workspace/Tasks";
 import Pages from "@/page/workspace/Pages";
 import Integrations from "@/page/workspace/Integrations";
+import Pricing from "@/page/workspace/Pricing";
 import Notifications from "@/page/workspace/Notifications";
 import TestEditor from "@/components/workspace/editor/test-editor";
 import { NewPageEditor, PageEditor } from "@/components/workspace/page";
@@ -29,6 +30,7 @@ export const protectedRoutePaths = [
   { path: PROTECTED_ROUTES.MEMBERS, element: <Members /> },
   { path: PROTECTED_ROUTES.SETTINGS, element: <Settings /> },
   { path: PROTECTED_ROUTES.INTEGRATIONS, element: <Integrations /> },
+  { path: PROTECTED_ROUTES.PRICING, element: <Pricing /> },
   { path: PROTECTED_ROUTES.PROJECT_DETAILS, element: <ProjectDetails /> },
   { path: PROTECTED_ROUTES.TEST_EDITOR, element: <TestEditor /> },
   { path: PROTECTED_ROUTES.NOTIFICATIONS, element: <Notifications /> },
