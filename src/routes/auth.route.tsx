@@ -9,12 +9,18 @@ const AuthRoute = () => {
   const user = authData?.user;
 
   const _isAuthRoute = isAuthRoute(location.pathname);
+  
+  // Check if token exists - if not, definitely show auth page
+  const hasToken = !!localStorage.getItem('token');
 
-  if (isLoading && !_isAuthRoute) return <DashboardSkeleton />;
+  if (isLoading && !_isAuthRoute && hasToken) return <DashboardSkeleton />;
 
-  if (!user) return <Outlet />;
+  // Only redirect if user exists AND token exists (prevent redirect after logout)
+  if (user && hasToken) {
+    return <Navigate to={`workspace/${user.currentWorkspace?._id}`} replace />;
+  }
 
-  return <Navigate to={`workspace/${user.currentWorkspace?._id}`} replace />;
+  return <Outlet />;
 };
 
 export default AuthRoute;

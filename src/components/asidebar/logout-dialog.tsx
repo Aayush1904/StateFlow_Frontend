@@ -23,16 +23,36 @@ const LogoutDialog = (props: {
 
   const queryClient = useQueryClient();
 
+  // Extract logout logic to ensure it always runs
+  const performLogout = useCallback(() => {
+    // Clear all authentication data from localStorage FIRST
+    localStorage.removeItem("token");
+    localStorage.removeItem("userId");
+    
+    // Clear all query cache to prevent stale data
+    queryClient.clear();
+    
+    // Reset auth query specifically to ensure it doesn't run
+    queryClient.resetQueries({ queryKey: ["authUser"] });
+    
+    // Set auth query data to undefined/null explicitly
+    queryClient.setQueryData(["authUser"], undefined);
+    
+    // Small delay to ensure state is cleared before navigation
+    setTimeout(() => {
+      navigate("/", { replace: true });
+      setIsOpen(false);
+    }, 100);
+  }, [queryClient, navigate]);
+
   const { mutate, isPending } = useMutation({
     mutationFn: logoutMutationFn,
     onSuccess: () => {
-      queryClient.resetQueries({
-        queryKey: ["authUser"],
-      });
-      navigate("/");
-      setIsOpen(false);
+      performLogout();
     },
     onError: (error) => {
+      // Even if API call fails, perform local logout
+      performLogout();
       toast({
         title: "Error",
         description: error.message,
