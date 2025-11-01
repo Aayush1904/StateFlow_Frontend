@@ -34,6 +34,7 @@ import { editTaskMutationFn } from "@/lib/api";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "@/hooks/use-toast";
 import { TaskType } from "@/types/api.type";
+import { isValidWorkspaceId } from "@/lib/workspace-utils";
 
 export default function EditTaskForm({ task, onClose }: { task: TaskType; onClose: () => void }) {
   const queryClient = useQueryClient();
@@ -85,10 +86,10 @@ export default function EditTaskForm({ task, onClose }: { task: TaskType; onClos
   });
 
   const onSubmit = (values: z.infer<typeof formSchema>) => {
-    if (isPending) return;
+    if (isPending || !isValidWorkspaceId(workspaceId)) return;
 
     const payload = {
-      workspaceId,
+      workspaceId: workspaceId!,
       projectId: task.project?._id ?? "",
       taskId: task._id,
       data: {

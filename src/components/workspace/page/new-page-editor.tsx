@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { useMutation, useQueryClient, useQuery } from '@tanstack/react-query';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -9,12 +9,12 @@ import { toast } from '@/hooks/use-toast';
 import { RichTextEditor } from '@/components/workspace/editor';
 import { createPageMutationFn, getTemplateByIdQueryFn, getTemplatesByWorkspaceQueryFn } from '@/lib/api';
 import useWorkspaceId from '@/hooks/use-workspace-id';
+import { isValidWorkspaceId } from '@/lib/workspace-utils';
 import Breadcrumbs, { useBreadcrumbs } from '@/components/ui/breadcrumbs';
 import { TemplateSelector } from './template-selector';
 import { markdownToHTML } from '@/lib/markdown';
 
 const NewPageEditor: React.FC = () => {
-    const { workspaceId } = useParams();
     const navigate = useNavigate();
     const queryClient = useQueryClient();
     const workspaceIdFromHook = useWorkspaceId();
@@ -27,16 +27,19 @@ const NewPageEditor: React.FC = () => {
     const [showTemplateSelector, setShowTemplateSelector] = useState(true);
     const [isSaving, setIsSaving] = useState(false);
 
+    const isValid = isValidWorkspaceId(workspaceIdFromHook);
+    
     // Fetch template content when a template is selected
     const { data: templateData } = useQuery({
         queryKey: ['template', workspaceIdFromHook, selectedTemplateId],
-        queryFn: () => getTemplateByIdQueryFn({ workspaceId: workspaceIdFromHook, templateId: selectedTemplateId! }),
-        enabled: !!selectedTemplateId && !showTemplateSelector,
+        queryFn: () => getTemplateByIdQueryFn({ workspaceId: workspaceIdFromHook!, templateId: selectedTemplateId! }),
+        enabled: isValid && !!selectedTemplateId && !showTemplateSelector,
     });
 
     const { data: templatesData } = useQuery({
         queryKey: ['templates-all', workspaceIdFromHook],
-        queryFn: () => getTemplatesByWorkspaceQueryFn({ workspaceId: workspaceIdFromHook }),
+        queryFn: () => getTemplatesByWorkspaceQueryFn({ workspaceId: workspaceIdFromHook! }),
+        enabled: isValid,
     });
 
     // Update content when template is loaded
@@ -78,8 +81,8 @@ const NewPageEditor: React.FC = () => {
     }, [title, templatesData, selectedTemplateId]);
 
     const applySuggestedTemplate = async () => {
-        if (!suggestedTemplateId) return;
-        const res = await getTemplateByIdQueryFn({ workspaceId: workspaceIdFromHook, templateId: suggestedTemplateId });
+        if (!suggestedTemplateId || !isValidWorkspaceId(workspaceIdFromHook)) return;
+        const res = await getTemplateByIdQueryFn({ workspaceId: workspaceIdFromHook!, templateId: suggestedTemplateId });
         const html = markdownToHTML(res.template.content || '');
         setContent(html);
         setSelectedTemplateId(suggestedTemplateId);
@@ -96,7 +99,7 @@ const NewPageEditor: React.FC = () => {
                 description: 'Page created successfully',
                 variant: 'success',
             });
-            navigate(`/workspace/${workspaceId}/pages`);
+            navigate(workspaceIdFromHook ? `/workspace/${workspaceIdFromHook}/pages` : '/');
         },
         onError: (error: any) => {
             toast({
@@ -118,9 +121,10 @@ const NewPageEditor: React.FC = () => {
             return;
         }
 
+        if (!isValidWorkspaceId(workspaceIdFromHook)) return;
         setIsSaving(true);
         createPage({
-            workspaceId: workspaceIdFromHook,
+            workspaceId: workspaceIdFromHook!,
             data: {
                 title: title.trim(),
                 content,
@@ -131,7 +135,8 @@ const NewPageEditor: React.FC = () => {
     };
 
     const handleBack = () => {
-        navigate(`/workspace/${workspaceId}/pages`);
+        if (!workspaceIdFromHook) return;
+        navigate(`/workspace/${workspaceIdFromHook}/pages`);
     };
 
     const handleTemplateSelect = (templateId: string | null) => {
@@ -165,7 +170,7 @@ const NewPageEditor: React.FC = () => {
 
                 {/* Template Selector */}
                 <TemplateSelector
-                    workspaceId={workspaceIdFromHook}
+                    workspaceId={workspaceIdFromHook || ''}
                     onSelectTemplate={handleTemplateSelect}
                     selectedTemplateId={selectedTemplateId}
                 />

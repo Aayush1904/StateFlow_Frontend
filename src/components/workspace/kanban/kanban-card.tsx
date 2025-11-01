@@ -16,6 +16,7 @@ import { TaskType } from '@/types/api.type';
 import { TaskPriorityEnum } from '@/constant';
 import { deleteTaskMutationFn, createTaskMutationFn } from '@/lib/api';
 import useWorkspaceId from '@/hooks/use-workspace-id';
+import { isValidWorkspaceId } from '@/lib/workspace-utils';
 import { toast } from '@/hooks/use-toast';
 import { cn } from '@/lib/utils';
 import EditTaskDialog from '../task/edit-task-dialog';
@@ -90,14 +91,15 @@ const KanbanCard: React.FC<KanbanCardProps> = ({ task, isDragging = false }) => 
     });
 
     const handleDelete = () => {
-        deleteTask({ workspaceId, taskId: task._id });
+        if (!isValidWorkspaceId(workspaceId)) return;
+        deleteTask({ workspaceId: workspaceId!, taskId: task._id });
     };
 
     const handleDuplicate = () => {
-        if (!task.project?._id) return;
+        if (!task.project?._id || !isValidWorkspaceId(workspaceId)) return;
 
         duplicateTask({
-            workspaceId,
+            workspaceId: workspaceId!,
             projectId: task.project._id,
             data: {
                 title: `${task.title} (Copy)`,

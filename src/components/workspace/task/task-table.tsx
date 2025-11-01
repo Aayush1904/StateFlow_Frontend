@@ -10,6 +10,7 @@ import { priorities, statuses } from "./table/data";
 import useTaskTableFilter from "@/hooks/use-task-table-filter";
 import { useQuery } from "@tanstack/react-query";
 import useWorkspaceId from "@/hooks/use-workspace-id";
+import { isValidWorkspaceId } from "@/lib/workspace-utils";
 import { getAllTasksQueryFn } from "@/lib/api";
 import { TaskType } from "@/types/api.type";
 import useGetProjectsInWorkspaceQuery from "@/hooks/api/use-get-projects";
@@ -38,6 +39,8 @@ const TaskTable = () => {
   const workspaceId = useWorkspaceId();
   const columns = getColumns(projectId);
 
+  const isValid = isValidWorkspaceId(workspaceId);
+  
   const { data, isLoading } = useQuery({
     queryKey: [
       "all-tasks",
@@ -49,7 +52,7 @@ const TaskTable = () => {
     ],
     queryFn: () =>
       getAllTasksQueryFn({
-        workspaceId,
+        workspaceId: workspaceId!,
         keyword: filters.keyword,
         priority: filters.priority,
         status: filters.status,
@@ -59,6 +62,7 @@ const TaskTable = () => {
         pageSize,
       }),
     staleTime: 0,
+    enabled: isValid,
   });
 
   const tasks: TaskType[] = data?.tasks || [];

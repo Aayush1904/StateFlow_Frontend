@@ -4,7 +4,7 @@ import API from '@/lib/axios-client';
 import { GitHubIssue } from '@/lib/api';
 
 interface UseGitHubIssuesProps {
-  workspaceId: string;
+  workspaceId: string | undefined;
   projectId?: string;
   enabled?: boolean;
 }
@@ -35,7 +35,7 @@ export const useGitHubIssues = ({
       const response = await API.get(`/integration/workspace/${workspaceId}/integrations`);
       return response.data;
     },
-    enabled: enabled && !!workspaceId,
+    enabled: enabled && !!workspaceId && workspaceId !== "undefined",
   });
 
   // Find GitHub integration

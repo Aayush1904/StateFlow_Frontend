@@ -10,6 +10,7 @@ import {
     CalendarEvent,
 } from '@/lib/api';
 import useWorkspaceId from '@/hooks/use-workspace-id';
+import { isValidWorkspaceId } from '@/lib/workspace-utils';
 import { Integration } from '@/lib/api';
 import { format } from 'date-fns';
 
@@ -43,11 +44,12 @@ export const CalendarEventsSync: React.FC<CalendarEventsSyncProps> = ({ integrat
     });
 
     const handleSync = () => {
+        if (!isValidWorkspaceId(workspaceId)) return;
         const now = new Date();
         const timeMax = new Date(now.getTime() + 30 * 24 * 60 * 60 * 1000); // Next 30 days
 
         syncEvents({
-            workspaceId,
+            workspaceId: workspaceId!,
             integrationId: integration._id,
             timeMin: now.toISOString(),
             timeMax: timeMax.toISOString(),
@@ -149,6 +151,7 @@ export const CalendarEventsSync: React.FC<CalendarEventsSyncProps> = ({ integrat
         </Card>
     );
 };
+
 
 
 

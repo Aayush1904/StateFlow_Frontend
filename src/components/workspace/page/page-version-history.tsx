@@ -24,6 +24,7 @@ import {
     comparePageVersionsQueryFn,
 } from '@/lib/api';
 import useWorkspaceId from '@/hooks/use-workspace-id';
+import { isValidWorkspaceId } from '@/lib/workspace-utils';
 
 interface PageVersionHistoryProps {
     pageId: string;
@@ -38,11 +39,13 @@ const PageVersionHistory: React.FC<PageVersionHistoryProps> = ({ pageId, onVersi
     const [selectedVersions, setSelectedVersions] = useState<string[]>([]);
     const [changeDescription, setChangeDescription] = useState('');
 
+    const isValid = isValidWorkspaceId(workspaceId);
+    
     // Fetch page versions
     const { data: versionsData, isLoading } = useQuery({
         queryKey: ['pageVersions', workspaceId, pageId],
-        queryFn: () => getPageVersionsQueryFn({ workspaceId, pageId }),
-        enabled: !!pageId,
+        queryFn: () => getPageVersionsQueryFn({ workspaceId: workspaceId!, pageId }),
+        enabled: isValid && !!pageId,
     });
 
     const versions = versionsData?.versions || [];
@@ -93,24 +96,26 @@ const PageVersionHistory: React.FC<PageVersionHistoryProps> = ({ pageId, onVersi
     const { data: compareData, isLoading: isComparing } = useQuery({
         queryKey: ['compareVersions', workspaceId, pageId, selectedVersions[0], selectedVersions[1]],
         queryFn: () => comparePageVersionsQueryFn({
-            workspaceId,
+            workspaceId: workspaceId!,
             pageId,
             versionId1: selectedVersions[0],
             versionId2: selectedVersions[1],
         }),
-        enabled: selectedVersions.length === 2,
+        enabled: isValid && selectedVersions.length === 2,
     });
 
     const handleCreateVersion = () => {
+        if (!isValidWorkspaceId(workspaceId)) return;
         createVersion({
-            workspaceId,
+            workspaceId: workspaceId!,
             pageId,
             data: { changeDescription: changeDescription || undefined },
         });
     };
 
     const handleRestoreVersion = (versionId: string) => {
-        restoreVersion({ workspaceId, pageId, versionId });
+        if (!isValidWorkspaceId(workspaceId)) return;
+        restoreVersion({ workspaceId: workspaceId!, pageId, versionId });
     };
 
     const handleVersionSelect = (versionId: string) => {

@@ -15,6 +15,7 @@ import { ConfirmDialog } from "@/components/resuable/confirm-dialog";
 import { TaskType } from "@/types/api.type";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import useWorkspaceId from "@/hooks/use-workspace-id";
+import { isValidWorkspaceId } from "@/lib/workspace-utils";
 import { deleteTaskMutationFn } from "@/lib/api";
 import { toast } from "@/hooks/use-toast";
 import EditTaskDialog from "../edit-task-dialog"; // Import the Edit Dialog
@@ -39,8 +40,9 @@ export function DataTableRowActions({ row }: DataTableRowActionsProps) {
   const taskCode = task.taskCode;
 
   const handleConfirm = () => {
+    if (!isValidWorkspaceId(workspaceId)) return;
     mutate(
-      { workspaceId, taskId },
+      { workspaceId: workspaceId!, taskId },
       {
         onSuccess: (data) => {
           queryClient.invalidateQueries({ queryKey: ["all-tasks", workspaceId] });

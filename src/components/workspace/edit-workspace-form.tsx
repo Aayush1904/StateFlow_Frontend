@@ -18,6 +18,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { editWorkspaceMutationFn } from "@/lib/api";
 import useWorkspaceId from "@/hooks/use-workspace-id";
 import { toast } from "@/hooks/use-toast";
+import { isValidWorkspaceId } from "@/lib/workspace-utils";
 import { Loader } from "lucide-react";
 import { Permissions } from "@/constant";
 
@@ -55,9 +56,9 @@ export default function EditWorkspaceForm() {
   }, [form, workspace]);
 
   const onSubmit = (values: z.infer<typeof formSchema>) => {
-    if (isPending) return;
+    if (isPending || !isValidWorkspaceId(workspaceId)) return;
     const payload = {
-      workspaceId: workspaceId,
+      workspaceId: workspaceId!,
       data: { ...values },
     };
     mutate(payload, {

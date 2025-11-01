@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Loader2, FileText, Sparkles, Calendar, Target, Users } from 'lucide-react';
 import { getTemplatesByWorkspaceQueryFn } from '@/lib/api';
+import { isValidWorkspaceId } from '@/lib/workspace-utils';
 
 interface Template {
     _id: string;
@@ -15,7 +16,7 @@ interface Template {
 }
 
 interface TemplateSelectorProps {
-    workspaceId: string;
+    workspaceId: string | undefined;
     onSelectTemplate: (templateId: string | null) => void;
     selectedTemplateId?: string | null;
 }
@@ -45,9 +46,12 @@ export const TemplateSelector: React.FC<TemplateSelectorProps> = ({
 }) => {
     const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
 
+    const isValid = isValidWorkspaceId(workspaceId);
+    
     const { data, isLoading, error } = useQuery({
         queryKey: ['templates', workspaceId, selectedCategory],
-        queryFn: () => getTemplatesByWorkspaceQueryFn({ workspaceId, category: selectedCategory || undefined }),
+        queryFn: () => getTemplatesByWorkspaceQueryFn({ workspaceId: workspaceId!, category: selectedCategory || undefined }),
+        enabled: isValid,
     });
 
     const templates = data?.templates || [];

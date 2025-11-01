@@ -9,7 +9,7 @@ const useGetProjectsInWorkspaceQuery = ({
   skip = false,
 }: AllProjectPayloadType) => {
   // Validate workspaceId - must be a valid string and not "undefined"
-  const isValidWorkspaceId = workspaceId && workspaceId !== "undefined" && typeof workspaceId === "string";
+  const isValidWorkspaceId = Boolean(workspaceId && workspaceId !== "undefined" && typeof workspaceId === "string");
   
   const query = useQuery({
     queryKey: ["allprojects", workspaceId, pageNumber, pageSize],

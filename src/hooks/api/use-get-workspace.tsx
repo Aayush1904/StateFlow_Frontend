@@ -1,13 +1,13 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useQuery } from "@tanstack/react-query";
 import { getWorkspaceByIdQueryFn } from "@/lib/api";
 import { CustomError } from "@/types/custom-error.type";
+import { WorkspaceByIdResponseType } from "@/types/api.type";
 
 const useGetWorkspaceQuery = (workspaceId: string | undefined) => {
   // Validate workspaceId - must be a valid string and not "undefined"
-  const isValidWorkspaceId = workspaceId && workspaceId !== "undefined" && typeof workspaceId === "string";
+  const isValidWorkspaceId = Boolean(workspaceId && workspaceId !== "undefined" && typeof workspaceId === "string");
   
-  const query = useQuery<any, CustomError>({
+  const query = useQuery<WorkspaceByIdResponseType, CustomError>({
     queryKey: ["workspace", workspaceId],
     queryFn: () => getWorkspaceByIdQueryFn(workspaceId!),
     staleTime: 0,

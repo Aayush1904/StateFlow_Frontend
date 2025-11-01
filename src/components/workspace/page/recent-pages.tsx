@@ -8,14 +8,18 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { getPagesByWorkspaceQueryFn } from "@/lib/api";
 import useWorkspaceId from "@/hooks/use-workspace-id";
+import { isValidWorkspaceId } from "@/lib/workspace-utils";
 import { format } from "date-fns";
 
 const RecentPages: React.FC = () => {
     const workspaceId = useWorkspaceId();
 
+    const isValid = isValidWorkspaceId(workspaceId);
+    
     const { data, isLoading } = useQuery({
         queryKey: ["pages", workspaceId],
-        queryFn: () => getPagesByWorkspaceQueryFn({ workspaceId }),
+        queryFn: () => getPagesByWorkspaceQueryFn({ workspaceId: workspaceId! }),
+        enabled: isValid,
     });
 
     const pages = (data?.pages || [])
@@ -30,7 +34,7 @@ const RecentPages: React.FC = () => {
                     <FileText className="h-4 w-4" />
                     Recent Pages
                 </CardTitle>
-                <Link to={`/workspace/${workspaceId}/pages/new`}>
+                <Link to={workspaceId ? `/workspace/${workspaceId}/pages/new` : '#'}>
                     <Button size="sm" variant="outline">
                         <Plus className="h-3 w-3 mr-1" />
                         New Page
@@ -48,7 +52,7 @@ const RecentPages: React.FC = () => {
                             <div key={page._id} className="py-3 flex items-start justify-between gap-3">
                                 <div className="min-w-0">
                                     <Link
-                                        to={`/workspace/${workspaceId}/pages/${page._id}`}
+                                        to={workspaceId ? `/workspace/${workspaceId}/pages/${page._id}` : '#'}
                                         className="font-medium text-sm line-clamp-1 hover:text-primary"
                                     >
                                         {page.title}

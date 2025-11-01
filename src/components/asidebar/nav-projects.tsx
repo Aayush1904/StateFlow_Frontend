@@ -36,6 +36,7 @@ import { PaginationType } from "@/types/api.type";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { deleteProjectMutationFn } from "@/lib/api";
 import { toast } from "@/hooks/use-toast";
+import { isValidWorkspaceId } from "@/lib/workspace-utils";
 
 export function NavProjects() {
   const navigate = useNavigate();
@@ -87,10 +88,10 @@ export function NavProjects() {
   };
 
   const handleConfirm = () => {
-    if (!context) return;
+    if (!context || !isValidWorkspaceId(workspaceId)) return;
     mutate(
       {
-        workspaceId,
+        workspaceId: workspaceId!,
         projectId: context?._id,
       },
       {
@@ -163,7 +164,7 @@ export function NavProjects() {
             </div>
           ) : (
             projects.map((item) => {
-              const projectUrl = `/workspace/${workspaceId}/project/${item._id}`;
+              const projectUrl = workspaceId ? `/workspace/${workspaceId}/project/${item._id}` : "#";
 
               return (
                 <SidebarMenuItem key={item._id}>

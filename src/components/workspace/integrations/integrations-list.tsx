@@ -28,6 +28,7 @@ import {
     testIntegrationMutationFn,
     Integration,
 } from '@/lib/api';
+import { isValidWorkspaceId } from '@/lib/workspace-utils';
 import { getErrorMessage, getErrorTitle } from '@/lib/error-messages';
 import useWorkspaceId from '@/hooks/use-workspace-id';
 import { GitHubIntegrationForm } from './github-integration-form';
@@ -116,16 +117,18 @@ const IntegrationCard: React.FC<{ integration: Integration; onDelete: () => void
     };
 
     const handleTest = () => {
+        if (!isValidWorkspaceId(workspaceId)) return;
         testIntegration({
-            workspaceId,
+            workspaceId: workspaceId!,
             integrationId: integration._id,
         });
     };
 
     const handleDelete = () => {
+        if (!isValidWorkspaceId(workspaceId)) return;
         if (confirm('Are you sure you want to delete this integration?')) {
             deleteIntegration({
-                workspaceId,
+                workspaceId: workspaceId!,
                 integrationId: integration._id,
             });
         }
@@ -210,9 +213,12 @@ export const IntegrationsList: React.FC = () => {
     const [showGitHubDialog, setShowGitHubDialog] = useState(false);
     const [showCalendarDialog, setShowCalendarDialog] = useState(false);
 
+    const isValid = isValidWorkspaceId(workspaceId);
+    
     const { data, isLoading, error } = useQuery({
         queryKey: ['integrations', workspaceId],
-        queryFn: () => getIntegrationsByWorkspaceQueryFn({ workspaceId }),
+        queryFn: () => getIntegrationsByWorkspaceQueryFn({ workspaceId: workspaceId! }),
+        enabled: isValid,
     });
 
     const integrations = data?.integrations || [];

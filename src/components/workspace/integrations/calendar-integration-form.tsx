@@ -7,6 +7,7 @@ import { Loader2 } from 'lucide-react';
 import { toast } from '@/hooks/use-toast';
 import { createIntegrationMutationFn } from '@/lib/api';
 import useWorkspaceId from '@/hooks/use-workspace-id';
+import { isValidWorkspaceId } from '@/lib/workspace-utils';
 
 interface CalendarIntegrationFormProps {
     onSuccess?: () => void;
@@ -52,8 +53,9 @@ export const CalendarIntegrationForm: React.FC<CalendarIntegrationFormProps> = (
             return;
         }
 
+        if (!isValidWorkspaceId(workspaceId)) return;
         createIntegration({
-            workspaceId,
+            workspaceId: workspaceId!,
             data: {
                 type: 'google_calendar',
                 name,
@@ -128,6 +130,7 @@ export const CalendarIntegrationForm: React.FC<CalendarIntegrationFormProps> = (
         </form>
     );
 };
+
 
 
 

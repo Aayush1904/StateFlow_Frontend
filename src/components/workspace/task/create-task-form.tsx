@@ -42,6 +42,7 @@ import { createTaskMutationFn } from "@/lib/api";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "@/hooks/use-toast";
 import { getErrorMessage, getErrorTitle } from "@/lib/error-messages";
+import { isValidWorkspaceId } from "@/lib/workspace-utils";
 
 export default function CreateTaskForm(props: {
   projectId?: string;
@@ -143,9 +144,9 @@ export default function CreateTaskForm(props: {
   const priorityOptions = transformOptions(taskPriorityList);
 
   const onSubmit = (values: z.infer<typeof formSchema>) => {
-    if (isPending) return;
+    if (isPending || !isValidWorkspaceId(workspaceId)) return;
     const payload = {
-      workspaceId,
+      workspaceId: workspaceId!,
       projectId: values.projectId,
       data: {
         ...values,

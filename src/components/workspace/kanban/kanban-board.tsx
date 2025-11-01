@@ -21,6 +21,7 @@ import { TaskType } from '@/types/api.type';
 import { TaskStatusEnum } from '@/constant';
 import { getAllTasksQueryFn, editTaskMutationFn } from '@/lib/api';
 import useWorkspaceId from '@/hooks/use-workspace-id';
+import { isValidWorkspaceId } from '@/lib/workspace-utils';
 import { toast } from '@/hooks/use-toast';
 
 import KanbanColumn from './kanban-column';
@@ -66,17 +67,20 @@ const KanbanBoard: React.FC<KanbanBoardProps> = ({ projectId }) => {
         })
     );
 
+    const isValid = isValidWorkspaceId(workspaceId);
+    
     // Fetch tasks
     const { data, isLoading } = useQuery({
         queryKey: ['all-tasks', workspaceId, projectId],
         queryFn: () =>
             getAllTasksQueryFn({
-                workspaceId,
+                workspaceId: workspaceId!,
                 projectId: projectId || '',
                 pageNumber: 1,
                 pageSize: 1000, // Get all tasks for Kanban
             }),
         staleTime: 0,
+        enabled: isValid,
     });
 
     const tasks: TaskType[] = data?.tasks || [];
@@ -139,9 +143,10 @@ const KanbanBoard: React.FC<KanbanBoardProps> = ({ projectId }) => {
 
         if (!task || task.status === newStatus) return;
 
+        if (!isValidWorkspaceId(workspaceId)) return;
         // Update task status
         updateTaskStatus({
-            workspaceId,
+            workspaceId: workspaceId!,
             projectId: task.project?._id || '',
             taskId,
             data: {

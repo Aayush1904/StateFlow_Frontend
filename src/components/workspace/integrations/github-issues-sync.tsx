@@ -12,6 +12,7 @@ import {
 } from '@/lib/api';
 import useWorkspaceId from '@/hooks/use-workspace-id';
 import { Integration } from '@/lib/api';
+import { isValidWorkspaceId } from '@/lib/workspace-utils';
 import { format } from 'date-fns';
 
 interface GitHubIssuesSyncProps {
@@ -58,8 +59,9 @@ export const GitHubIssuesSync: React.FC<GitHubIssuesSyncProps> = ({ integration 
     });
 
     const handleSync = () => {
+        if (!isValidWorkspaceId(workspaceId)) return;
         syncAllData({
-            workspaceId,
+            workspaceId: workspaceId!,
             integrationId: integration._id,
         });
     };

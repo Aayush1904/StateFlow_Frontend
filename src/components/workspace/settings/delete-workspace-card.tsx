@@ -9,6 +9,7 @@ import useWorkspaceId from "@/hooks/use-workspace-id";
 import { deleteWorkspaceMutationFn } from "@/lib/api";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
+import { isValidWorkspaceId } from "@/lib/workspace-utils";
 
 const DeleteWorkspaceCard = () => {
   const { workspace } = useAuthContext();
@@ -24,7 +25,8 @@ const DeleteWorkspaceCard = () => {
   });
 
   const handleConfirm = () => {
-    mutate(workspaceId, {
+    if (!isValidWorkspaceId(workspaceId)) return;
+    mutate(workspaceId!, {
       onSuccess: (data) => {
         queryClient.invalidateQueries({
           queryKey: ["userWorkspaces"],

@@ -32,6 +32,7 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { getActivityFeedQueryFn, ActivityFeedFilters, ActivityType } from '@/lib/api';
 import useWorkspaceId from '@/hooks/use-workspace-id';
 import { getAvatarColor, getAvatarFallbackText } from '@/lib/helper';
+import { isValidWorkspaceId } from '@/lib/workspace-utils';
 
 interface ActivityFeedProps {
     className?: string;
@@ -45,10 +46,12 @@ const ActivityFeed: React.FC<ActivityFeedProps> = ({ className }) => {
     });
     const [showFilters, setShowFilters] = useState(false);
 
+    const isValid = isValidWorkspaceId(workspaceId);
+    
     const { data, isLoading, error, refetch } = useQuery({
         queryKey: ['activity-feed', workspaceId, filters],
-        queryFn: () => getActivityFeedQueryFn({ workspaceId, filters }),
-        enabled: !!workspaceId,
+        queryFn: () => getActivityFeedQueryFn({ workspaceId: workspaceId!, filters }),
+        enabled: isValid,
         staleTime: 30000, // 30 seconds
         refetchInterval: 60000, // Refetch every minute
     });

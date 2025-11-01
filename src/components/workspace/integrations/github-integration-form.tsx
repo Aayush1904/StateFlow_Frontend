@@ -8,6 +8,7 @@ import { toast } from '@/hooks/use-toast';
 import { createIntegrationMutationFn } from '@/lib/api';
 import useWorkspaceId from '@/hooks/use-workspace-id';
 import { getErrorMessage, getErrorTitle } from '@/lib/error-messages';
+import { isValidWorkspaceId } from '@/lib/workspace-utils';
 
 interface GitHubIntegrationFormProps {
     onSuccess?: () => void;
@@ -56,8 +57,9 @@ export const GitHubIntegrationForm: React.FC<GitHubIntegrationFormProps> = ({ on
             return;
         }
 
+        if (!isValidWorkspaceId(workspaceId)) return;
         createIntegration({
-            workspaceId,
+            workspaceId: workspaceId!,
             data: {
                 type: 'github',
                 name,

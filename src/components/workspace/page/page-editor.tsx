@@ -9,6 +9,7 @@ import { toast } from '@/hooks/use-toast';
 import { RichTextEditor } from '@/components/workspace/editor';
 import { getPageByIdQueryFn, updatePageMutationFn } from '@/lib/api';
 import useWorkspaceId from '@/hooks/use-workspace-id';
+import { isValidWorkspaceId } from '@/lib/workspace-utils';
 import Breadcrumbs, { useBreadcrumbs } from '@/components/ui/breadcrumbs';
 import PageVersionHistory from './page-version-history';
 
@@ -25,11 +26,13 @@ const PageEditor: React.FC = () => {
     const [showVersionHistory, setShowVersionHistory] = useState(false);
     
 
+    const isValid = isValidWorkspaceId(workspaceIdFromHook);
+    
     // Fetch page data
     const { data, isLoading } = useQuery({
         queryKey: ['page', workspaceIdFromHook, pageId],
-        queryFn: () => getPageByIdQueryFn({ workspaceId: workspaceIdFromHook, pageId: pageId! }),
-        enabled: !!pageId,
+        queryFn: () => getPageByIdQueryFn({ workspaceId: workspaceIdFromHook!, pageId: pageId! }),
+        enabled: isValid && !!pageId,
     });
 
     const { mutate: updatePage } = useMutation({
@@ -72,9 +75,10 @@ const PageEditor: React.FC = () => {
             return;
         }
 
+        if (!isValidWorkspaceId(workspaceIdFromHook)) return;
         setIsSaving(true);
         updatePage({
-            workspaceId: workspaceIdFromHook,
+            workspaceId: workspaceIdFromHook!,
             pageId: pageId!,
             data: {
                 title: title.trim(),

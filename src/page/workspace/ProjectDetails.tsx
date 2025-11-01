@@ -10,6 +10,7 @@ import ProjectHeader from "@/components/workspace/project/project-header";
 import TaskTable from "@/components/workspace/task/task-table";
 import ProjectTimeline from "@/components/workspace/project/project-timeline";
 import useWorkspaceId from "@/hooks/use-workspace-id";
+import { isValidWorkspaceId } from "@/lib/workspace-utils";
 import { getProjectAnalyticsQueryFn } from "@/lib/api";
 import { useNotifications } from "@/context/notification-provider";
 
@@ -20,14 +21,16 @@ const ProjectDetails = () => {
   const queryClient = useQueryClient();
   const { socket } = useNotifications();
 
+  const isValid = isValidWorkspaceId(workspaceId);
+  
   const { data, isPending } = useQuery({
     queryKey: ["project-analytics", workspaceId, projectId],
     queryFn: () =>
       getProjectAnalyticsQueryFn({
-        workspaceId,
+        workspaceId: workspaceId!,
         projectId: projectId!,
       }),
-    enabled: Boolean(workspaceId && projectId),
+    enabled: isValid && Boolean(projectId),
     staleTime: 0,
   });
 

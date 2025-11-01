@@ -5,6 +5,7 @@ import { GitHubIssuesSync } from '@/components/workspace/integrations/github-iss
 import { CalendarEventsSync } from '@/components/workspace/integrations/calendar-events-sync';
 import { getIntegrationsByWorkspaceQueryFn, Integration } from '@/lib/api';
 import useWorkspaceId from '@/hooks/use-workspace-id';
+import { isValidWorkspaceId } from '@/lib/workspace-utils';
 import Breadcrumbs, { useBreadcrumbs } from '@/components/ui/breadcrumbs';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
@@ -12,9 +13,12 @@ const Integrations: React.FC = () => {
     const workspaceId = useWorkspaceId();
     const { getIntegrationsBreadcrumbs } = useBreadcrumbs();
 
+    const isValid = isValidWorkspaceId(workspaceId);
+    
     const { data } = useQuery({
         queryKey: ['integrations', workspaceId],
-        queryFn: () => getIntegrationsByWorkspaceQueryFn({ workspaceId }),
+        queryFn: () => getIntegrationsByWorkspaceQueryFn({ workspaceId: workspaceId! }),
+        enabled: isValid,
     });
 
     const integrations = data?.integrations || [];

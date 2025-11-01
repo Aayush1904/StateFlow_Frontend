@@ -2,6 +2,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { TaskPriorityEnum, TaskStatusEnum } from "@/constant";
 import useWorkspaceId from "@/hooks/use-workspace-id";
+import { isValidWorkspaceId } from "@/lib/workspace-utils";
 import { getAllTasksQueryFn } from "@/lib/api";
 import {
   getAvatarColor,
@@ -16,14 +17,16 @@ import { Loader } from "lucide-react";
 const RecentTasks = () => {
   const workspaceId = useWorkspaceId();
 
+  const isValid = isValidWorkspaceId(workspaceId);
+  
   const { data, isLoading } = useQuery({
     queryKey: ["all-tasks", workspaceId],
     queryFn: () =>
       getAllTasksQueryFn({
-        workspaceId,
+        workspaceId: workspaceId!,
       }),
     staleTime: 0,
-    enabled: !!workspaceId,
+    enabled: isValid,
   });
 
   const tasks: TaskType[] = data?.tasks || [];

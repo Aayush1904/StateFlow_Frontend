@@ -7,7 +7,7 @@ const WorkspaceAnalytics = () => {
   const workspaceId = useWorkspaceId();
 
   // Validate workspaceId - must be a valid string and not "undefined"
-  const isValidWorkspaceId = workspaceId && workspaceId !== "undefined" && typeof workspaceId === "string";
+  const isValidWorkspaceId = Boolean(workspaceId && workspaceId !== "undefined" && typeof workspaceId === "string");
 
   const { data, isPending } = useQuery({
     queryKey: ["workspace-analytics", workspaceId],

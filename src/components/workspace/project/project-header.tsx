@@ -3,6 +3,7 @@ import { useParams } from "react-router-dom";
 import CreateTaskDialog from "../task/create-task-dialog";
 import EditProjectDialog from "./edit-project-dialog";
 import useWorkspaceId from "@/hooks/use-workspace-id";
+import { isValidWorkspaceId } from "@/lib/workspace-utils";
 import { keepPreviousData, useQuery } from "@tanstack/react-query";
 import { getProjectByIdQueryFn } from "@/lib/api";
 import PermissionsGuard from "@/components/resuable/permission-guard";
@@ -14,15 +15,17 @@ const ProjectHeader = () => {
 
   const workspaceId = useWorkspaceId();
 
+  const isValid = isValidWorkspaceId(workspaceId);
+  
   const { data, isPending, isError } = useQuery({
     queryKey: ["singleProject", projectId],
     queryFn: () =>
       getProjectByIdQueryFn({
-        workspaceId,
+        workspaceId: workspaceId!,
         projectId,
       }),
     staleTime: Infinity,
-    enabled: !!projectId,
+    enabled: isValid && !!projectId,
     placeholderData: keepPreviousData,
   });
 

@@ -21,6 +21,7 @@ import { format } from 'date-fns';
 
 import { getPagesByWorkspaceQueryFn, deletePageMutationFn } from '@/lib/api';
 import useWorkspaceId from '@/hooks/use-workspace-id';
+import { isValidWorkspaceId } from '@/lib/workspace-utils';
 import { ConfirmDialog } from '@/components/resuable/confirm-dialog';
 import { motion } from 'framer-motion';
 
@@ -34,10 +35,13 @@ const PagesList: React.FC = () => {
         pageTitle: '',
     });
 
+    const isValid = isValidWorkspaceId(workspaceId);
+    
     // Fetch pages
     const { data, isLoading } = useQuery({
         queryKey: ['pages', workspaceId],
-        queryFn: () => getPagesByWorkspaceQueryFn({ workspaceId }),
+        queryFn: () => getPagesByWorkspaceQueryFn({ workspaceId: workspaceId! }),
+        enabled: isValid,
     });
 
     // Delete page mutation
@@ -70,7 +74,8 @@ const PagesList: React.FC = () => {
     );
 
     const handleDelete = (pageId: string) => {
-        deletePage({ workspaceId, pageId });
+        if (!isValidWorkspaceId(workspaceId)) return;
+        deletePage({ workspaceId: workspaceId!, pageId });
     };
 
     const openDeleteDialog = (pageId: string, pageTitle: string) => {

@@ -22,6 +22,7 @@ import EmojiPickerComponent from "@/components/emoji-picker";
 import { ProjectType } from "@/types/api.type";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import useWorkspaceId from "@/hooks/use-workspace-id";
+import { isValidWorkspaceId } from "@/lib/workspace-utils";
 import { editProjectMutationFn } from "@/lib/api";
 import { toast } from "@/hooks/use-toast";
 import { Loader } from "lucide-react";
@@ -70,10 +71,10 @@ export default function EditProjectForm(props: {
   };
 
   const onSubmit = (values: z.infer<typeof formSchema>) => {
-    if (isPending) return;
+    if (isPending || !isValidWorkspaceId(workspaceId)) return;
     const payload = {
       projectId,
-      workspaceId,
+      workspaceId: workspaceId!,
       data: { emoji, ...values },
     };
     mutate(payload, {
