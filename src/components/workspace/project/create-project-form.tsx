@@ -21,10 +21,12 @@ import {
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import useWorkspaceId from "@/hooks/use-workspace-id";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { createProjectMutationFn } from "@/lib/api";
+import { useMutation, useQueryClient, useQuery } from "@tanstack/react-query";
+import { createProjectMutationFn, getAllWorkspacesUserIsMemberQueryFn } from "@/lib/api";
 import { toast } from "@/hooks/use-toast";
 import { Loader } from "lucide-react";
+import { getErrorMessage, getErrorTitle } from "@/lib/error-messages";
+import useCreateWorkspaceDialog from "@/hooks/use-create-workspace-dialog";
 
 export default function CreateProjectForm({
   onClose,
@@ -33,7 +35,18 @@ export default function CreateProjectForm({
 }) {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
-  const workspaceId = useWorkspaceId();
+  const workspaceIdFromRoute = useWorkspaceId();
+  const { onOpen: openCreateWorkspaceDialog } = useCreateWorkspaceDialog();
+
+  // Get user workspaces in case workspaceId is undefined
+  const { data: workspacesData } = useQuery({
+    queryKey: ["userWorkspaces"],
+    queryFn: getAllWorkspacesUserIsMemberQueryFn,
+    enabled: !workspaceIdFromRoute,
+  });
+
+  // Determine the workspaceId to use
+  const workspaceId = workspaceIdFromRoute || workspacesData?.workspaces?.[0]?._id;
 
   const [emoji, setEmoji] = useState("📊");
 
@@ -62,6 +75,19 @@ export default function CreateProjectForm({
 
   const onSubmit = (values: z.infer<typeof formSchema>) => {
     if (isPending) return;
+
+    // Validate workspaceId before submitting
+    if (!workspaceId) {
+      toast({
+        title: "No Workspace Selected",
+        description: "Please create a workspace first before creating a project.",
+        variant: "destructive",
+      });
+      onClose();
+      openCreateWorkspaceDialog();
+      return;
+    }
+
     const payload = {
       workspaceId,
       data: {
@@ -86,9 +112,11 @@ export default function CreateProjectForm({
         setTimeout(() => onClose(), 500);
       },
       onError: (error) => {
+        const friendlyMessage = getErrorMessage(error);
+        const errorTitle = getErrorTitle(error);
         toast({
-          title: "Error",
-          description: error.message,
+          title: errorTitle,
+          description: friendlyMessage,
           variant: "destructive",
         });
       },

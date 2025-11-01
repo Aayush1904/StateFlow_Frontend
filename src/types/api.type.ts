@@ -223,7 +223,7 @@ export type EditProjectPayloadType = {
 
 //ALL PROJECTS IN WORKSPACE TYPE
 export type AllProjectPayloadType = {
-  workspaceId: string;
+  workspaceId: string | undefined;
   pageNumber?: number;
   pageSize?: number;
   keyword?: string;

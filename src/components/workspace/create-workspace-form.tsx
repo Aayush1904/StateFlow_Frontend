@@ -18,6 +18,7 @@ import { createWorkspaceMutationFn } from "@/lib/api";
 import { useNavigate } from "react-router-dom";
 import { toast } from "@/hooks/use-toast";
 import { Loader } from "lucide-react";
+import { getErrorMessage, getErrorTitle } from "@/lib/error-messages";
 
 export default function CreateWorkspaceForm({
   onClose,
@@ -60,9 +61,11 @@ export default function CreateWorkspaceForm({
         navigate(`/workspace/${workspace._id}`);
       },
       onError: (error) => {
+        const friendlyMessage = getErrorMessage(error);
+        const errorTitle = getErrorTitle(error);
         toast({
-          title: "Error",
-          description: error.message,
+          title: errorTitle,
+          description: friendlyMessage,
           variant: "destructive",
         });
       },

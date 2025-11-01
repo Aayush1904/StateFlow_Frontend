@@ -50,6 +50,16 @@ API.interceptors.response.use(
     return response;
   },
   async (error) => {
+    // Handle errors without response (network errors)
+    if (!error.response) {
+      const customError: CustomError = {
+        ...error,
+        errorCode: "NETWORK_ERROR",
+        message: error.message || "Network error occurred",
+      };
+      return Promise.reject(customError);
+    }
+
     const { data, status } = error.response;
 
     if (data === "Unauthorized" && status === 401) {
@@ -71,6 +81,16 @@ AI_API.interceptors.response.use(
     return response;
   },
   async (error) => {
+    // Handle errors without response (network errors)
+    if (!error.response) {
+      const customError: CustomError = {
+        ...error,
+        errorCode: "NETWORK_ERROR",
+        message: error.message || "Network error occurred",
+      };
+      return Promise.reject(customError);
+    }
+
     const { data, status } = error.response;
 
     if (data === "Unauthorized" && status === 401) {

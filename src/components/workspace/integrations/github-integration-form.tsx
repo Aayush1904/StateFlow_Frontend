@@ -7,6 +7,7 @@ import { Loader2, ExternalLink } from 'lucide-react';
 import { toast } from '@/hooks/use-toast';
 import { createIntegrationMutationFn } from '@/lib/api';
 import useWorkspaceId from '@/hooks/use-workspace-id';
+import { getErrorMessage, getErrorTitle } from '@/lib/error-messages';
 
 interface GitHubIntegrationFormProps {
     onSuccess?: () => void;
@@ -33,9 +34,11 @@ export const GitHubIntegrationForm: React.FC<GitHubIntegrationFormProps> = ({ on
             onSuccess?.();
         },
         onError: (error: any) => {
+            const friendlyMessage = getErrorMessage(error);
+            const errorTitle = getErrorTitle(error);
             toast({
-                title: 'Error',
-                description: error.message || 'Failed to create GitHub integration',
+                title: errorTitle,
+                description: friendlyMessage,
                 variant: 'destructive',
             });
         },

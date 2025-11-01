@@ -25,6 +25,7 @@ import { useMutation } from "@tanstack/react-query";
 import { registerMutationFn } from "@/lib/api";
 import { toast } from "@/hooks/use-toast";
 import { Loader } from "lucide-react";
+import { getErrorMessage, getErrorTitle } from "@/lib/error-messages";
 
 const SignUp = () => {
   const navigate = useNavigate();
@@ -60,10 +61,11 @@ const SignUp = () => {
         navigate("/");
       },
       onError: (error) => {
-        console.log(error);
+        const friendlyMessage = getErrorMessage(error);
+        const errorTitle = getErrorTitle(error);
         toast({
-          title: "Error",
-          description: error.message,
+          title: errorTitle,
+          description: friendlyMessage,
           variant: "destructive",
         });
       },

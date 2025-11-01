@@ -28,6 +28,7 @@ import {
     testIntegrationMutationFn,
     Integration,
 } from '@/lib/api';
+import { getErrorMessage, getErrorTitle } from '@/lib/error-messages';
 import useWorkspaceId from '@/hooks/use-workspace-id';
 import { GitHubIntegrationForm } from './github-integration-form';
 import { CalendarIntegrationForm } from './calendar-integration-form';
@@ -49,9 +50,11 @@ const IntegrationCard: React.FC<{ integration: Integration; onDelete: () => void
             });
         },
         onError: (error: any) => {
+            const friendlyMessage = getErrorMessage(error);
+            const errorTitle = getErrorTitle(error);
             toast({
-                title: 'Error',
-                description: error.message || 'Failed to test integration',
+                title: errorTitle,
+                description: friendlyMessage,
                 variant: 'destructive',
             });
         },
@@ -69,9 +72,11 @@ const IntegrationCard: React.FC<{ integration: Integration; onDelete: () => void
             onDelete();
         },
         onError: (error: any) => {
+            const friendlyMessage = getErrorMessage(error);
+            const errorTitle = getErrorTitle(error);
             toast({
-                title: 'Error',
-                description: error.message || 'Failed to delete integration',
+                title: errorTitle,
+                description: friendlyMessage,
                 variant: 'destructive',
             });
         },

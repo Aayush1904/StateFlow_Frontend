@@ -41,6 +41,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { createTaskMutationFn } from "@/lib/api";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "@/hooks/use-toast";
+import { getErrorMessage, getErrorTitle } from "@/lib/error-messages";
 
 export default function CreateTaskForm(props: {
   projectId?: string;
@@ -170,9 +171,11 @@ export default function CreateTaskForm(props: {
         onClose();
       },
       onError: (error) => {
+        const friendlyMessage = getErrorMessage(error);
+        const errorTitle = getErrorTitle(error);
         toast({
-          title: "Error",
-          description: error.message,
+          title: errorTitle,
+          description: friendlyMessage,
           variant: "destructive",
         });
       },

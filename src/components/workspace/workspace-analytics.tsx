@@ -6,11 +6,14 @@ import { getWorkspaceAnalyticsQueryFn } from "@/lib/api";
 const WorkspaceAnalytics = () => {
   const workspaceId = useWorkspaceId();
 
+  // Validate workspaceId - must be a valid string and not "undefined"
+  const isValidWorkspaceId = workspaceId && workspaceId !== "undefined" && typeof workspaceId === "string";
+
   const { data, isPending } = useQuery({
     queryKey: ["workspace-analytics", workspaceId],
-    queryFn: () => getWorkspaceAnalyticsQueryFn(workspaceId),
+    queryFn: () => getWorkspaceAnalyticsQueryFn(workspaceId!),
     staleTime: 0,
-    enabled: !!workspaceId,
+    enabled: isValidWorkspaceId,
   });
 
   const analytics = data?.analytics;
